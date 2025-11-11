@@ -1,0 +1,32 @@
+#include <TS_lib.h>
+#include "structs.h"
+
+TS_lib ts = TS_lib(&Serial);
+struct realtime_data rt_data;
+struct page1 p1;
+struct page2 p2;
+
+void setup() {
+	ts.setRealTimeStruct(&rt_data);
+	ts.setPages({&p1, &p2});
+}
+
+void loop() {
+	ts.update();
+	changeValue();
+}
+
+unsigned long prev_time;
+unsigned long times;
+void changeValue() {
+	rt_data.seconds = millis();
+	rt_data.tps = (millis()/10)%100;
+	rt_data.rpm = (millis())%100;
+
+	times++;
+	if ((millis()-prev_time) >= 1000) {
+		prev_time = millis();
+		rt_data.cyclesPerSecond = times;
+		times = 0;
+	}
+}
