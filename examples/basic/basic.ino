@@ -25,7 +25,7 @@ unsigned long times;
 void changeValue() {
 	rt_data.seconds = millis();
 	rt_data.tps = (millis()/10)%100;
-	rt_data.rpm = (millis())%100;
+	rt_data.rpm = (millis())%p1.rpmMaxLimit;
 
 	times++;
 	if ((millis()-prev_time) >= 1000) {
