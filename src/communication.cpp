@@ -144,6 +144,7 @@ void sendCodeVersion(const Stream* s) {
 	sendMessage(s, SERIAL_MSG_SUCCESS, CODE_VERSION, sizeof(CODE_VERSION)-1); // -1 per il terminatore finale
 }
 void sendSerialProtocolVersion(const Stream* s) {
+	sendMessage(s, SERIAL_MSG_SUCCESS, PROTOCOL_VERSION, sizeof(PROTOCOL_VERSION)-1);
 }
 void sendTestComm(const Stream* s) {
 }
