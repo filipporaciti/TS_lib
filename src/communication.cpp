@@ -137,6 +137,8 @@ void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, co
 }
 
 void sendCodeMessage(const Stream* s, const uint8_t code) {
+	uint8_t data[0] = {};
+	sendMessage(s, code, data, sizeof(data));
 }
 
 void sendCodeVersion(const Stream* s) {
