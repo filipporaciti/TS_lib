@@ -13,7 +13,7 @@ class Communication_legacy {
     Communication_legacy() = default;
     Communication_legacy(const Stream* serial);
     Communication_legacy(const Stream* serial, const char* code_version);
-    bool isLegacy(uint8_t cmd);
+    static bool isLegacy(uint8_t cmd);
 		void serialReceiveLegacy();
   private:
     const char* _code_version;
