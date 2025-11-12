@@ -1,5 +1,6 @@
 #include "communication.h"
 #include "pages.h"
+#include "rt_data.h"
 #include <CRC32.h>
 #include <Arduino.h>
 
@@ -87,7 +88,7 @@ void Communication::processSerialPayload() {
 			sendCRCPage();
 			break;
 		case 'A': // receive realtime data
-			sendRealTimeData(_serial);
+			sendRealTimeData();
 			break;
 		case 'b': // burn page: 1 page num
 			sendSavePage(_serial);
@@ -181,7 +182,12 @@ void Communication::sendCRCPage() {
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
-void Communication::sendRealTimeData(const Stream* s) {
+void Communication::sendRealTimeData() {
+	uint8_t data[getRtDataLen()] = {};
+
+	memcpy(data, getRtData(), getRtDataLen());
+
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
 void Communication::sendSavePage(const Stream* s) {
