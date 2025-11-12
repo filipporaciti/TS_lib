@@ -1,7 +1,7 @@
 /*
 */
-#ifndef TS_LIB_h
-#define TS_LIB_h
+#ifndef TS_LIB_H
+#define TS_LIB_H
 
 #include "Arduino.h"
 
@@ -17,6 +17,7 @@ class TS_lib
     void update();
     void setRealTimeStruct(const void* rt_data, const size_t structLen);
     void setPages(const Page* pages);
+    void setCodeVersion(const char* code_version);
   private:
     Stream* _serial1;
 };
