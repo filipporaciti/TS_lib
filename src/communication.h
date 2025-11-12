@@ -27,5 +27,5 @@ extern unsigned long serialReceiveStartTime;
 extern uint8_t serialReceiveBuffer[SERIAL_BUFFER_SIZE];
 extern uint16_t serialBufferIndex;
 
-void serialReceive(Stream* s);
+void serialReceive(const Stream* s);
 

@@ -9,22 +9,22 @@ unsigned long serialReceiveStartTime = 0;
 uint16_t serialBufferIndex = 0;
 uint8_t serialReceiveBuffer[SERIAL_BUFFER_SIZE] = {};
 
-void processSerialPayload(Stream* s);
-void sendMessage(Stream* s, uint8_t flag, const uint8_t *payload, uint16_t payloadLen);
-void sendCodeVersion(Stream* s);
-void sendSerialProtocolVersion(Stream* s);
-void sendTestComm(Stream* s);
-void sendPageValue(Stream* s);
-void sendCRCPage(Stream* s);
-void sendRealTimeData(Stream* s);
-void sendSavePage(Stream* s);
-void sendChangePageValue(Stream* s);
+void processSerialPayload(const Stream* s);
+void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen);
+void sendCodeVersion(const Stream* s);
+void sendSerialProtocolVersion(const Stream* s);
+void sendTestComm(const Stream* s);
+void sendPageValue(const Stream* s);
+void sendCRCPage(const Stream* s);
+void sendRealTimeData(const Stream* s);
+void sendSavePage(const Stream* s);
+void sendChangePageValue(const Stream* s);
 // --------------------------
-void sendCodeMessage(Stream* s, uint8_t code);
+void sendCodeMessage(const Stream* s, const uint8_t code);
 // *********************************************
 
 
-void serialReceive(Stream* s) {
+void serialReceive(const Stream* s) {
 
 	// if ((serialStatusFlag != SERIAL_READY || (serialStatusFlag == SERIAL_READY &&  s->available() == 1)) && (millis() - serialReceiveStartTime) > SERIAL_TIMEOUT) {
 	// 	sendCodeMessage(s, SERIAL_MSG_TIMEOUT);
@@ -76,7 +76,7 @@ void serialReceive(Stream* s) {
 }
 
 
-void processSerialPayload(Stream* s) {
+void processSerialPayload(const Stream* s) {
 
 	switch (serialReceiveBuffer[0]) {
 		case 'Q': // code version
@@ -112,32 +112,53 @@ void processSerialPayload(Stream* s) {
 	}
 }
 
-void sendMessage(Stream* s, uint8_t flag, const uint8_t *payload, uint16_t payloadLen) {
+void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen) {
+	uint8_t header[2];
+  header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
+  header[1] = (payloadLen + 1) & 0xFF;
+
+  // Calcola CRC anche includendo il flag
+  uint32_t crc;
+  
+  CRC32 crcCalc;
+  crcCalc.update(&flag, 1);
+  crcCalc.update(payload, payloadLen);
+  crc = crcCalc.finalize();
+
+  // --- Invio ---
+  s->write(header, 2);        // dimensione totale (2 byte)
+  s->write(&flag, 1);
+  s->write(payload, payloadLen); // dati veri e propri
+  s->write((crc >> 24) & 0xFF);
+  s->write((crc >> 16) & 0xFF);
+  s->write((crc >> 8) & 0xFF);
+  s->write(crc & 0xFF);
+  s->flush();
 }
 
-void sendCodeMessage(Stream* s, uint8_t code) {
+void sendCodeMessage(const Stream* s, const uint8_t code) {
 }
 
-void sendCodeVersion(Stream* s) {
+void sendCodeVersion(const Stream* s) {
 }
-void sendSerialProtocolVersion(Stream* s) {
+void sendSerialProtocolVersion(const Stream* s) {
 }
-void sendTestComm(Stream* s) {
-}
-
-
-
-void sendPageValue(Stream* s) {
+void sendTestComm(const Stream* s) {
 }
 
-void sendCRCPage(Stream* s) {
+
+
+void sendPageValue(const Stream* s) {
 }
 
-void sendRealTimeData(Stream* s) {
+void sendCRCPage(const Stream* s) {
 }
 
-void sendSavePage(Stream* s) {
+void sendRealTimeData(const Stream* s) {
 }
 
-void sendChangePageValue(Stream* s) {
+void sendSavePage(const Stream* s) {
+}
+
+void sendChangePageValue(const Stream* s) {
 }
