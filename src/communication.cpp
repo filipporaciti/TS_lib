@@ -1,4 +1,5 @@
 #include "communication.h"
+#include "pages.h"
 #include <CRC32.h>
 #include <Arduino.h>
 
@@ -80,7 +81,7 @@ void Communication::processSerialPayload() {
 			sendTestComm(_serial);
 			break;
 		case 'p': // send page value: 1 page num | 2 offset | 2 len
-			sendPageValue(_serial);
+			sendPageValue();
 			break;
 		case 'd': // senc crc page: 1 page num
 			sendCRCPage(_serial);
@@ -141,7 +142,21 @@ void Communication::sendTestComm(const Stream* s) {
 
 
 
-void Communication::sendPageValue(const Stream* s) {
+void Communication::sendPageValue() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
+	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+
+	void* first_byte = getPageValue(pageNum, offset);
+	if (first_byte == nullptr) {
+		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+		return;
+	}
+
+	uint8_t data[len] = {};
+
+	memcpy(data, first_byte, len);
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
 void Communication::sendCRCPage(const Stream* s) {
