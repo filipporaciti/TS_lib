@@ -1,9 +1,10 @@
 #include "TS_lib.h"
-
 #include "Arduino.h"
+#include "communication.h"
 
 TS_lib::TS_lib(const Stream* s1) {
 	_serial1 = s1;
+	_comm = Communication(_serial1);
 }
 
 void TS_lib::update() {
