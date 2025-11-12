@@ -14,8 +14,8 @@ struct page1 {
   uint8_t crankTeeth;
   uint8_t crankMissingTeeth;
 
-  uint8_t tpsMin;
-  uint8_t tpsMax;
+  uint8_t tpsMin; // analog input value
+  uint8_t tpsMax; // analog input value
 
   uint16_t rpmMaxLimit;
 };

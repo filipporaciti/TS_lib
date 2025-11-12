@@ -7,8 +7,12 @@ struct page1 p1;
 struct page2 p2;
 
 void setup() {
-	ts.setRealTimeStruct(&rt_data);
-	ts.setPages({&p1, &p2});
+	ts.setRealTimeStruct(&rt_data, sizeof(rt_data));
+
+	struct Page page_1 = {&p1, sizeof(p1)};
+	struct Page page_2 = {&p2, sizeof(p2)};
+	Page pages[2] = {page_1, page_2};
+	ts.setPages(pages);
 }
 
 void loop() {
@@ -21,7 +25,7 @@ unsigned long times;
 void changeValue() {
 	rt_data.seconds = millis();
 	rt_data.tps = (millis()/10)%100;
-	rt_data.rpm = (millis())%100;
+	rt_data.rpm = (millis())%p1.rpmMaxLimit;
 
 	times++;
 	if ((millis()-prev_time) >= 1000) {
