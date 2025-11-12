@@ -1,5 +1,5 @@
 #include "communication_legacy.h"
-#include "globals.h"
+#include "TS_lib.h"
 
 void serialReceiveLegacy(Stream* s) {
 
@@ -7,17 +7,17 @@ void serialReceiveLegacy(Stream* s) {
 		uint8_t serialCmd = s->read();
 		switch (serialCmd) {
 			case 'Q': {
-				s->print(CODE_VERSION);
+				s->print(TS_lib::CODE_VERSION);
 				s->flush();
 				break;
 			}
 			case 'S': {
-				s->print(CODE_VERSION);
+				s->print(TS_lib::CODE_VERSION);
 				s->flush();
 				break;
 			}
 			case 'F': {
-				s->print(PROTOCOL_VERSION);
+				s->print(TS_lib::PROTOCOL_VERSION);
 				s->flush();
 				break;
 			}

@@ -13,6 +13,9 @@ struct Page {
 class TS_lib
 {
   public:
+    static char* CODE_VERSION = "TSlib_11-2025";
+    static char* PROTOCOL_VERSION = "002";
+
     TS_lib(const Stream* s1);
     void update();
     void setRealTimeStruct(const void* rt_data, const size_t structLen);

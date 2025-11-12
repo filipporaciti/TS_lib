@@ -1,5 +1,5 @@
 #include "communication.h"
-#include "globals.h"
+#include "TS_lib.h"
 #include <CRC32.h>
 
 // *********************************************
@@ -141,10 +141,10 @@ void sendCodeMessage(const Stream* s, const uint8_t code) {
 	sendMessage(s, code, data, sizeof(data));
 }
 void sendCodeVersion(const Stream* s) {
-	sendMessage(s, SERIAL_MSG_SUCCESS, CODE_VERSION, sizeof(CODE_VERSION)-1); // -1 per il terminatore finale
+	sendMessage(s, SERIAL_MSG_SUCCESS, TS_lib::CODE_VERSION, sizeof(TS_lib::CODE_VERSION)-1); // -1 per il terminatore finale
 }
 void sendSerialProtocolVersion(const Stream* s) {
-	sendMessage(s, SERIAL_MSG_SUCCESS, PROTOCOL_VERSION, sizeof(PROTOCOL_VERSION)-1);
+	sendMessage(s, SERIAL_MSG_SUCCESS, TS_lib::PROTOCOL_VERSION, sizeof(TS_lib::PROTOCOL_VERSION)-1);
 }
 void sendTestComm(const Stream* s) {
 	uint8_t data[] = {0xFF};
