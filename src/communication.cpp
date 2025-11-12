@@ -84,7 +84,7 @@ void Communication::processSerialPayload() {
 			sendPageValue();
 			break;
 		case 'd': // senc crc page: 1 page num
-			sendCRCPage(_serial);
+			sendCRCPage();
 			break;
 		case 'A': // receive realtime data
 			sendRealTimeData(_serial);
@@ -159,7 +159,26 @@ void Communication::sendPageValue() {
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
-void Communication::sendCRCPage(const Stream* s) {
+void Communication::sendCRCPage() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+
+	void* first_byte = getPageValue(pageNum, 0); // check pageNum
+	if (first_byte == nullptr) {
+		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+		return;
+	}
+
+	size_t pageLen = getPageLen(pageNum);
+	uint32_t crc = getPageCRC(first_byte, pageLen);
+
+  uint8_t data[4];
+
+  data[0] = (crc >> 24) & 0xFF;
+	data[1] = (crc >> 16) & 0xFF;
+	data[2] = (crc >> 8) & 0xFF;
+	data[3] = crc & 0xFF;   
+
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
 void Communication::sendRealTimeData(const Stream* s) {
