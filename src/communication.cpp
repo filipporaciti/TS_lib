@@ -140,8 +140,8 @@ void sendCodeMessage(const Stream* s, const uint8_t code) {
 	uint8_t data[0] = {};
 	sendMessage(s, code, data, sizeof(data));
 }
-
 void sendCodeVersion(const Stream* s) {
+	sendMessage(s, SERIAL_MSG_SUCCESS, CODE_VERSION, sizeof(CODE_VERSION)-1); // -1 per il terminatore finale
 }
 void sendSerialProtocolVersion(const Stream* s) {
 }
