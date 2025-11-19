@@ -5,6 +5,7 @@
 #define COMMUNICATION_H
 
 #include <Arduino.h>
+#include "pages.h"
 
 #define DEFAULT_CODE_VERSION "TSlib_11-2025"
 #define DEFAULT_PROTOCOL_VERSION "002"
@@ -24,8 +25,8 @@
 class Communication {
   public:
     Communication() = default;
-    Communication(const Stream* serial);
-    Communication(const Stream* serial, const char* code_version);
+    Communication(const Stream* serial, const Pages* pages);
+    Communication(const Stream* serial, const char* code_version, const Pages* pages);
     void serialReceive();
   private:
     enum SerialStatus { SERIAL_READY, SERIAL_RECEIVE_PAYLOAD_INPROGRESS,SERIAL_RECEIVE_CRC_INPROGRESS, };
@@ -33,6 +34,7 @@ class Communication {
     const char* _code_version;
     const char* _protocol_version;
     const Stream* _serial;
+    const Pages* _pages;
 
     SerialStatus serialStatusFlag = SERIAL_READY;
     uint16_t serialPayloadLen = 0;

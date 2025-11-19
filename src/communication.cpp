@@ -5,15 +5,17 @@
 #include <Arduino.h>
 
 
-Communication::Communication(const Stream* serial) {
+Communication::Communication(const Stream* serial, const Pages* pages) {
 	_code_version = DEFAULT_CODE_VERSION;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
 	_serial = serial;
+	_pages = pages;
 }
-Communication::Communication(const Stream* serial, const char* code_version) {
+Communication::Communication(const Stream* serial, const char* code_version, const Pages* pages) {
 	_code_version = code_version;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
 	_serial = serial;
+	_pages = pages;
 }
 
 void Communication::serialReceive() {
@@ -150,7 +152,7 @@ void Communication::sendPageValue() {
 	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
 	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
 
-	void* first_byte = getPageValue(pageNum, offset);
+	void* first_byte = _pages->getPageValue(pageNum, offset);
 	if (first_byte == nullptr) {
 		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 		return;
@@ -165,14 +167,14 @@ void Communication::sendPageValue() {
 void Communication::sendCRCPage() {
 	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
 
-	void* first_byte = getPageValue(pageNum, 0); // check pageNum
+	void* first_byte = _pages->getPageValue(pageNum, 0); // check pageNum
 	if (first_byte == nullptr) {
 		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 		return;
 	}
 
-	size_t pageLen = getPageLen(pageNum);
-	uint32_t crc = getPageCRC(first_byte, pageLen);
+	size_t pageLen = _pages->getPageLen(pageNum);
+	uint32_t crc = _pages->getPageCRC(first_byte, pageLen);
 
   uint8_t data[4];
 

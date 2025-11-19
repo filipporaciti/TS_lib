@@ -1,10 +1,15 @@
 #include <TS_lib.h>
 #include "structs.h"
 
-TS_lib ts = TS_lib(&Serial);
-struct realtime_data rt_data;
 struct page1 p1;
 struct page2 p2;
+struct Page page_1 = {&p1, sizeof(p1)};
+struct Page page_2 = {&p2, sizeof(p2)};
+Page pages[2] = {page_1, page_2};
+
+TS_lib ts = TS_lib(&Serial, pages);
+struct realtime_data rt_data;
+
 
 void setup() {
 	Serial.begin(115200);
@@ -12,11 +17,6 @@ void setup() {
 	while (Serial.available())
 
 	ts.setRealTimeStruct(&rt_data, sizeof(rt_data));
-
-	struct Page page_1 = {&p1, sizeof(p1)};
-	struct Page page_2 = {&p2, sizeof(p2)};
-	Page pages[2] = {page_1, page_2};
-	ts.setPages(pages);
 }
 
 void loop() {
