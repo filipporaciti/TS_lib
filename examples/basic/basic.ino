@@ -2,10 +2,8 @@
 #include "structs.h"
 
 struct page1 p1;
-struct page2 p2;
 struct Page page_1 = {&p1, sizeof(p1)};
-struct Page page_2 = {&p2, sizeof(p2)};
-Page pages[2] = {page_1, page_2};
+Page pages[2] = {page_1};
 
 TS_lib ts = TS_lib(&Serial, pages);
 struct realtime_data rt_data;
