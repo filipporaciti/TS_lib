@@ -6,7 +6,9 @@
 
 
 Communication::Communication(const Stream* serial) {
-	Communication(serial, DEFAULT_CODE_VERSION);
+	_code_version = DEFAULT_CODE_VERSION;
+	_protocol_version = DEFAULT_PROTOCOL_VERSION;
+	_serial = serial;
 }
 Communication::Communication(const Stream* serial, const char* code_version) {
 	_code_version = code_version;
