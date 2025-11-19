@@ -7,6 +7,10 @@ struct page1 p1;
 struct page2 p2;
 
 void setup() {
+	Serial.begin(115200);
+
+	while (Serial.available())
+
 	ts.setRealTimeStruct(&rt_data, sizeof(rt_data));
 
 	struct Page page_1 = {&p1, sizeof(p1)};
