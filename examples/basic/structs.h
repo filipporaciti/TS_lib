@@ -19,7 +19,3 @@ struct page1 {
 
   uint16_t rpmMaxLimit;
 };
-
-struct page2 {
-    uint8_t fuelVeTable[16][16];
-};
