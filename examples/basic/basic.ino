@@ -3,7 +3,7 @@
 
 struct page1 p1;
 struct Page page_1 = {&p1, sizeof(p1)};
-Page pages[2] = {page_1};
+Page pages[] = {page_1};
 
 TS_lib ts = TS_lib(&Serial, pages);
 struct realtime_data rt_data;
