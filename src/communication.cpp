@@ -94,7 +94,7 @@ void Communication::processSerialPayload() {
 			sendSavePage(_serial);
 			break;
 		case 'M': // change page value: 1 page num | 2 offset | 2 len | n values
-			sendChangePageValue(_serial);
+			sendChangePageValue();
 			break;
 		case 'I':
 			sendCanID();
@@ -214,5 +214,24 @@ void Communication::sendRealTimeData() {
 void Communication::sendSavePage(const Stream* s) {
 }
 
-void Communication::sendChangePageValue(const Stream* s) {
+void Communication::sendChangePageValue() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
+	size_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+
+	void* first_byte = _pages->getPageValue(pageNum, offset);
+	size_t pageLen = _pages->getPageLen(pageNum);
+
+	if (first_byte == nullptr || (len + offset) > pageLen) {
+		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+		return;
+	}
+
+	uint8_t* page_data = (uint8_t*) first_byte;
+	for (size_t i=0; i<len; i++) {
+		page_data[len-1-i] = serialReceiveBuffer[6+i];
+	}
+
+
+	sendCodeMessage(_serial, SERIAL_MSG_SUCCESS);
 }
