@@ -6,10 +6,10 @@ Pages::Pages(const Page* pages) {
 }
 
 void* Pages::getPageValue(const uint16_t pageNum, const uint16_t offset){
-	if (pageNum >= (sizeof(_pages)/sizeof(_pages[0]))) {
+	if (pageNum > (sizeof(*_pages)/sizeof(Page))) {
 		return nullptr;
 	}
-	return (uint8_t*)&_pages[pageNum].pointer + offset;
+	return (uint8_t*)&_pages[pageNum-1].pointer + offset;
 }
 
 uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
@@ -22,8 +22,8 @@ uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
 }
 
 size_t Pages::getPageLen(const uint16_t pageNum){
-	if (pageNum >= (sizeof(_pages)/sizeof(_pages[0]))) {
+	if (pageNum > (sizeof(*_pages)/sizeof(Page))) {
 		return 0;
 	}
-	return _pages[pageNum].len;
+	return _pages[pageNum-1].len;
 }
