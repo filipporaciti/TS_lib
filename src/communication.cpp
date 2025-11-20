@@ -96,7 +96,7 @@ void Communication::processSerialPayload() {
 		case 'M': // change page value: 1 page num | 2 offset | 2 len | n values
 			sendChangePageValue(_serial);
 			break;
-		case 'I': // change page value: 1 page num | 2 offset | 2 len | n values
+		case 'I':
 			sendCanID();
 			break;
 		default:
@@ -144,6 +144,8 @@ void Communication::sendTestComm(const Stream* s) {
 	sendMessage(s, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 void Communication::sendCanID() {
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, _canID, sizeof(_canID));
+}
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, "\x01", 1);
 }
 

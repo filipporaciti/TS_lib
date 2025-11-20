@@ -35,6 +35,7 @@ class Communication {
     const char* _protocol_version;
     const Stream* _serial;
     const Pages* _pages;
+    const char* _canID = "\x01";
 
     SerialStatus serialStatusFlag = SERIAL_READY;
     uint16_t serialPayloadLen = 0;
