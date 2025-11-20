@@ -1,4 +1,5 @@
 #include "pages.h"
+#include <CRC32.h>
 
 Pages::Pages(const Page* pages) {
 	_pages = pages;
