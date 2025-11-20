@@ -5,12 +5,8 @@
 #include <Arduino.h>
 
 
-Communication::Communication(const Stream* serial, const Pages* pages) {
-	_code_version = DEFAULT_CODE_VERSION;
-	_protocol_version = DEFAULT_PROTOCOL_VERSION;
-	_serial = serial;
-	_pages = pages;
-}
+Communication::Communication(const Stream* serial, const Pages* pages)
+	: Communication(serial, DEFAULT_CODE_VERSION, pages) {}
 Communication::Communication(const Stream* serial, const char* code_version, const Pages* pages) {
 	_code_version = code_version;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
