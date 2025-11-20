@@ -22,5 +22,8 @@ uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
 }
 
 size_t Pages::getPageLen(const uint16_t pageNum){
-
+	if (pageNum >= (sizeof(_pages)/sizeof(_pages[0]))) {
+		return 0;
+	}
+	return _pages[pageNum].len;
 }
