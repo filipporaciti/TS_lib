@@ -9,6 +9,9 @@
 
 #define DEFAULT_CODE_VERSION "TSlib_11-2025"
 #define DEFAULT_PROTOCOL_VERSION "002"
+#define SERIAL_VERSION 2
+#define TABLE_BLOCKING_FACTOR 240
+#define WRITE_BLOCKING_FACTOR 240
 
 
 #define SERIAL_BUFFER_SIZE        256
@@ -35,7 +38,7 @@ class Communication {
     const char* _protocol_version;
     const Stream* _serial;
     const Pages* _pages;
-    const char* _canID = "\x01";
+    const char* _canID = "\x01"; // must be one value
 
     SerialStatus serialStatusFlag = SERIAL_READY;
     uint16_t serialPayloadLen = 0;
@@ -50,6 +53,7 @@ class Communication {
     void sendCRCPage();
     void sendRealTimeData();
     void sendCanID();
+    void sendCanInfo();
     static void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen);
     static void sendTestComm(const Stream* s);
     static void sendSavePage(const Stream* s);

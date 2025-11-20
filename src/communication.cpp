@@ -99,6 +99,9 @@ void Communication::processSerialPayload() {
 		case 'I':
 			sendCanID();
 			break;
+		case 'f':
+			sendCanInfo();
+			break;
 		default:
 			sendCodeMessage(_serial, SERIAL_MSG_UKNW_COMMAND);
 			break;
@@ -146,7 +149,18 @@ void Communication::sendTestComm(const Stream* s) {
 void Communication::sendCanID() {
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, _canID, sizeof(_canID));
 }
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, "\x01", 1);
+
+void Communication::sendCanInfo() {
+	if (serialReceiveBuffer[1] == _canID[0]) {
+		char payload[5];
+		payload[0] = SERIAL_VERSION;
+		payload[1] = (TABLE_BLOCKING_FACTOR >> 8);
+		payload[2] = (TABLE_BLOCKING_FACTOR) & 0xFF;
+		payload[3] = (WRITE_BLOCKING_FACTOR >> 8);
+		payload[4] = (WRITE_BLOCKING_FACTOR) & 0xFF;
+
+		sendMessage(_serial, SERIAL_MSG_SUCCESS, payload, sizeof(payload));
+	}
 }
 
 
