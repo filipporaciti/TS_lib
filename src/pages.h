@@ -13,10 +13,9 @@ class Pages {
     Pages() = default;
     Pages(const Page* pages);
 
-    void* getPageValue(uint16_t pageNum, uint16_t offset);
-	uint32_t getPageCRC(const void *page, size_t pageLen);
-	size_t getPageLen(uint16_t pageNum);
+    void* getPageValue(const uint16_t pageNum, const uint16_t offset);
 	uint32_t getPageCRC(const void *page, const size_t pageLen);
+	size_t getPageLen(const uint16_t pageNum);
 
   private:
     const Page* _pages;
