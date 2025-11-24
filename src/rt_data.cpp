@@ -7,9 +7,8 @@ Rt_data::Rt_data(const Rt_values* rt_values) {
 
 
 void* Rt_data::getRtData() {
-  uint8_t data[12] = {};
-	return &data;
+	return _rt_values->pointer;
 }
 size_t Rt_data::getRtDataLen() {
-	return 12;
+	return _rt_values->len;
 }
