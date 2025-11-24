@@ -1,31 +1,39 @@
 #include "communication_legacy.h"
-#include "TS_lib.h"
 
-void serialReceiveLegacy(Stream* s) {
 
-	if (s->available() > 0) {
-		uint8_t serialCmd = s->read();
+Communication_legacy::Communication_legacy(const Stream* serial)
+	: Communication_legacy(serial, DEFAULT_CODE_VERSION) {}
+Communication_legacy::Communication_legacy(const Stream* serial, const char* code_version) {
+	_code_version = code_version;
+	_protocol_version = DEFAULT_PROTOCOL_VERSION;
+	_serial = serial;
+}
+
+void Communication_legacy::serialReceiveLegacy() {
+
+	if (_serial->available()) {
+		char serialCmd = (char)_serial->read();
 		switch (serialCmd) {
 			case 'Q': {
-				s->print(TS_lib::CODE_VERSION);
-				s->flush();
+				_serial->print(_code_version);
+				_serial->flush();
 				break;
 			}
 			case 'S': {
-				s->print(TS_lib::CODE_VERSION);
-				s->flush();
+				_serial->print(_code_version);
+				_serial->flush();
 				break;
 			}
 			case 'F': {
-				s->print(TS_lib::PROTOCOL_VERSION);
-				s->flush();
+				_serial->print(_protocol_version);
+				_serial->flush();
 				break;
 			}
 		}
 	}
 }
 
-bool isLegacy(uint8_t cmd) {
+bool Communication_legacy::isLegacy(uint8_t cmd) {
 	uint8_t cmds[] = {'Q', 'S', 'F'};
 	for (uint8_t i=0; i<sizeof(cmds); i++) {
 		if (cmds[i] == cmd) {

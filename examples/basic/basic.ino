@@ -1,22 +1,26 @@
 #include <TS_lib.h>
 #include "structs.h"
 
-TS_lib ts = TS_lib(&Serial);
-struct realtime_data rt_data;
+// create page object
 struct page1 p1;
-struct page2 p2;
+struct Page page_1 = {&p1, sizeof(p1)};
+Page pages[] = {page_1};
+
+// create realtime object
+struct realtime_data rt_data;
+struct Rt_values rt_values = {&rt_data, sizeof(rt_data)};
+
+// create TS_lib object
+TS_lib ts = TS_lib(&Serial, &rt_values, pages);
+
 
 void setup() {
-	ts.setRealTimeStruct(&rt_data, sizeof(rt_data));
-
-	struct Page page_1 = {&p1, sizeof(p1)};
-	struct Page page_2 = {&p2, sizeof(p2)};
-	Page pages[2] = {page_1, page_2};
-	ts.setPages(pages);
+	Serial.begin(115200);
+	while (Serial.available());
 }
 
 void loop() {
-	ts.update();
+	ts.update(); // update serial communication
 	changeValue();
 }
 

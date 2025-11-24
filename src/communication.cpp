@@ -1,57 +1,49 @@
 #include "communication.h"
-#include "TS_lib.h"
+#include "pages.h"
+#include "rt_data.h"
+#include "rt_data.h"
 #include <CRC32.h>
-
-// *********************************************
-SerialStatus serialStatusFlag = SERIAL_READY;
-uint16_t serialPayloadLen = 0;
-unsigned long serialReceiveStartTime = 0;
-uint16_t serialBufferIndex = 0;
-uint8_t serialReceiveBuffer[SERIAL_BUFFER_SIZE] = {};
-
-void processSerialPayload(const Stream* s);
-void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen);
-void sendCodeVersion(const Stream* s);
-void sendSerialProtocolVersion(const Stream* s);
-void sendTestComm(const Stream* s);
-void sendPageValue(const Stream* s);
-void sendCRCPage(const Stream* s);
-void sendRealTimeData(const Stream* s);
-void sendSavePage(const Stream* s);
-void sendChangePageValue(const Stream* s);
-// --------------------------
-void sendCodeMessage(const Stream* s, const uint8_t code);
-// *********************************************
+#include <Arduino.h>
 
 
-void serialReceive(const Stream* s) {
+Communication::Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages)
+	: Communication(serial, DEFAULT_CODE_VERSION, rt_data, pages) {}
+Communication::Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages) {
+	_code_version = code_version;
+	_protocol_version = DEFAULT_PROTOCOL_VERSION;
+	_serial = serial;
+	_pages = pages;
+	_rt_data = rt_data;
+}
 
-	// if ((serialStatusFlag != SERIAL_READY || (serialStatusFlag == SERIAL_READY &&  s->available() == 1)) && (millis() - serialReceiveStartTime) > SERIAL_TIMEOUT) {
-	// 	sendCodeMessage(s, SERIAL_MSG_TIMEOUT);
+void Communication::serialReceive() {
+
+	// if ((serialStatusFlag != SERIAL_READY || (serialStatusFlag == SERIAL_READY &&  _serial->available() == 1)) && (millis() - serialReceiveStartTime) > SERIAL_TIMEOUT) {
+	// 	sendCodeMessage(_serial, SERIAL_MSG_TIMEOUT);
 	// 	serialReceiveStartTime = millis();
 	// 	while (s->available() > 0) {
-	// 		s->read();
+	// 		_serial->read();
 	// 	}
 	// 	serialStatusFlag = SERIAL_READY;
 	// }
 
-	if (serialStatusFlag == SERIAL_READY && s->available() >= 2) {
+	if (serialStatusFlag == SERIAL_READY && _serial->available() >= 2) {
 		serialReceiveStartTime = millis();
-		serialPayloadLen = (s->read() << 8 | s->read());
+		serialPayloadLen = (_serial->read() << 8 | _serial->read());
 		serialBufferIndex = 0;
 		serialStatusFlag = SERIAL_RECEIVE_PAYLOAD_INPROGRESS;
 		
 		if (serialPayloadLen > SERIAL_BUFFER_SIZE) { // se la lunghezza supero quella del buffer errore
-			sendCodeMessage(s, SERIAL_MSG_RANGE_ERR);
-			while (s->available() > 0) {
-				s->read();
+			sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+			while (_serial->available() > 0) {
+				_serial->read();
 			}
 			serialStatusFlag = SERIAL_READY;
 		}
 	}
 
-	while (serialStatusFlag == SERIAL_RECEIVE_PAYLOAD_INPROGRESS && s->available() > 0 && serialBufferIndex < serialPayloadLen) {
-		serialReceiveBuffer[serialBufferIndex] = s->read();
+	while (serialStatusFlag == SERIAL_RECEIVE_PAYLOAD_INPROGRESS && _serial->available() > 0 && serialBufferIndex < serialPayloadLen) {
+		serialReceiveBuffer[serialBufferIndex] = _serial->read();
 		serialBufferIndex++;
 
 		if (serialBufferIndex == serialPayloadLen) {
@@ -59,16 +51,16 @@ void serialReceive(const Stream* s) {
 		}
 	}
 
-	if (serialStatusFlag == SERIAL_RECEIVE_CRC_INPROGRESS && s->available() >= 4) {
+	if (serialStatusFlag == SERIAL_RECEIVE_CRC_INPROGRESS && _serial->available() >= 4) {
 		uint32_t crc = CRC32::calculate(serialReceiveBuffer, serialBufferIndex);
 
-		if (s->read() != ((crc >> 24) & 0xFF) || 
-		s->read() != ((crc >> 16) & 0xFF) || 
-		s->read() != ((crc >> 8) & 0xFF) || 
-		s->read() != (crc & 0xFF)) {
-			sendCodeMessage(s, SERIAL_MSG_WRONG_CRC);
+		if (_serial->read() != ((crc >> 24) & 0xFF) || 
+		_serial->read() != ((crc >> 16) & 0xFF) || 
+		_serial->read() != ((crc >> 8) & 0xFF) || 
+		_serial->read() != (crc & 0xFF)) {
+			sendCodeMessage(_serial, SERIAL_MSG_WRONG_CRC);
 		} else {
-			processSerialPayload(s);
+			processSerialPayload();
 		}
 
 		serialStatusFlag = SERIAL_READY;
@@ -76,43 +68,49 @@ void serialReceive(const Stream* s) {
 }
 
 
-void processSerialPayload(const Stream* s) {
+void Communication::processSerialPayload() {
 
 	switch (serialReceiveBuffer[0]) {
 		case 'Q': // code version
-			sendCodeVersion(s);
+			sendCodeVersion();
 			break;
 		case 'S': // string code version
-			sendCodeVersion(s);
+			sendCodeVersion();
 			break;
 		case 'F': // protocol version
-			sendSerialProtocolVersion(s);
+			sendSerialProtocolVersion();
 			break;
 		case 'C': // test communication
-			sendTestComm(s);
+			sendTestComm(_serial);
 			break;
 		case 'p': // send page value: 1 page num | 2 offset | 2 len
-			sendPageValue(s);
+			sendPageValue();
 			break;
 		case 'd': // senc crc page: 1 page num
-			sendCRCPage(s);
+			sendCRCPage();
 			break;
 		case 'A': // receive realtime data
-			sendRealTimeData(s);
+			sendRealTimeData();
 			break;
 		case 'b': // burn page: 1 page num
-			sendSavePage(s);
+			sendSavePage();
 			break;
 		case 'M': // change page value: 1 page num | 2 offset | 2 len | n values
-			sendChangePageValue(s);
+			sendChangePageValue();
+			break;
+		case 'I':
+			sendCanID();
+			break;
+		case 'f':
+			sendCanInfo();
 			break;
 		default:
-			sendCodeMessage(s, SERIAL_MSG_UKNW_COMMAND);
+			sendCodeMessage(_serial, SERIAL_MSG_UKNW_COMMAND);
 			break;
 	}
 }
 
-void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen) {
+void Communication::sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen) {
 	uint8_t header[2];
   header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
   header[1] = (payloadLen + 1) & 0xFF;
@@ -136,34 +134,113 @@ void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, co
   s->flush();
 }
 
-void sendCodeMessage(const Stream* s, const uint8_t code) {
+void Communication::sendCodeMessage(const Stream* s, const uint8_t code) {
 	uint8_t data[0] = {};
 	sendMessage(s, code, data, sizeof(data));
 }
-void sendCodeVersion(const Stream* s) {
-	sendMessage(s, SERIAL_MSG_SUCCESS, TS_lib::CODE_VERSION, sizeof(TS_lib::CODE_VERSION)-1); // -1 per il terminatore finale
+void Communication::sendCodeVersion() {
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, _code_version, sizeof(_code_version)-1); // -1 per il terminatore finale
 }
-void sendSerialProtocolVersion(const Stream* s) {
-	sendMessage(s, SERIAL_MSG_SUCCESS, TS_lib::PROTOCOL_VERSION, sizeof(TS_lib::PROTOCOL_VERSION)-1);
+void Communication::sendSerialProtocolVersion() {
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, _protocol_version, sizeof(_protocol_version)-1);
 }
-void sendTestComm(const Stream* s) {
+void Communication::sendTestComm(const Stream* s) {
 	uint8_t data[] = {0xFF};
 	sendMessage(s, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
-
-
-
-void sendPageValue(const Stream* s) {
+void Communication::sendCanID() {
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, _canID, sizeof(_canID));
 }
 
-void sendCRCPage(const Stream* s) {
+void Communication::sendCanInfo() {
+	if (serialReceiveBuffer[1] == _canID[0]) {
+		char payload[5];
+		payload[0] = SERIAL_VERSION;
+		payload[1] = (TABLE_BLOCKING_FACTOR >> 8);
+		payload[2] = (TABLE_BLOCKING_FACTOR) & 0xFF;
+		payload[3] = (WRITE_BLOCKING_FACTOR >> 8);
+		payload[4] = (WRITE_BLOCKING_FACTOR) & 0xFF;
+
+		sendMessage(_serial, SERIAL_MSG_SUCCESS, payload, sizeof(payload));
+	}
 }
 
-void sendRealTimeData(const Stream* s) {
+
+void Communication::sendPageValue() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
+	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+
+	void* first_byte = _pages->getPageValue(pageNum, offset);
+	if (first_byte == nullptr) {
+		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+		return;
+	}
+
+	uint8_t data[len] = {};
+
+	memcpy(data, first_byte, len);
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
-void sendSavePage(const Stream* s) {
+void Communication::sendCRCPage() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+
+	void* first_byte = _pages->getPageValue(pageNum, 0); // check pageNum
+	if (first_byte == nullptr) {
+		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+		return;
+	}
+
+	size_t pageLen = _pages->getPageLen(pageNum);
+	uint32_t crc = _pages->getPageCRC(first_byte, pageLen);
+
+  uint8_t data[4];
+
+  data[0] = (crc >> 24) & 0xFF;
+	data[1] = (crc >> 16) & 0xFF;
+	data[2] = (crc >> 8) & 0xFF;
+	data[3] = crc & 0xFF;   
+
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
-void sendChangePageValue(const Stream* s) {
+void Communication::sendRealTimeData() {
+	uint8_t data[_rt_data->getRtDataLen()] = {};
+
+	memcpy(data, _rt_data->getRtData(), _rt_data->getRtDataLen());
+
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
+}
+
+void Communication::sendSavePage() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+	bool ris = _pages->storePage(pageNum);
+	if (ris) {
+		sendCodeMessage(_serial, SERIAL_MSG_BURN_SUCCESS);
+	} else {
+		sendCodeMessage(_serial, SERIAL_MSG_UKNW_COMMAND); // non esiste un code message specifico in caso fallisce il burn
+	}
+}
+
+void Communication::sendChangePageValue() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
+	size_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+
+	void* first_byte = _pages->getPageValue(pageNum, offset);
+	size_t pageLen = _pages->getPageLen(pageNum);
+
+	if (first_byte == nullptr || (len + offset) > pageLen) {
+		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
+		return;
+	}
+
+	uint8_t* page_data = (uint8_t*) first_byte;
+	for (size_t i=0; i<len; i++) {
+		page_data[len-1-i] = serialReceiveBuffer[6+i];
+	}
+
+
+	sendCodeMessage(_serial, SERIAL_MSG_SUCCESS);
 }
