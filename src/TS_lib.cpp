@@ -22,6 +22,3 @@ void TS_lib::update() {
 	}
 
 }
-void TS_lib::setCodeVersion(const char* code_version){
-
-}

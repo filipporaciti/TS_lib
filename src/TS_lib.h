@@ -16,7 +16,6 @@ class TS_lib {
 
     TS_lib(const Stream* s1, const Rt_values* rt_data, const Page* pages);
     void update();
-    void setCodeVersion(const char* code_version);
   private:
     const Stream* _serial1;
     const Communication _comm;
