@@ -5,8 +5,10 @@ struct page1 p1;
 struct Page page_1 = {&p1, sizeof(p1)};
 Page pages[] = {page_1};
 
-TS_lib ts = TS_lib(&Serial, pages);
 struct realtime_data rt_data;
+struct Rt_values rt_values = {&rt_data, sizeof(rt_data)};
+
+TS_lib ts = TS_lib(&Serial, &rt_values, pages);
 
 
 void setup() {

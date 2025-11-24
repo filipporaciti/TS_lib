@@ -6,6 +6,7 @@
 
 #include <Arduino.h>
 #include "pages.h"
+#include "rt_data.h"
 
 #define DEFAULT_CODE_VERSION "TSlib_11-2025"
 #define DEFAULT_PROTOCOL_VERSION "002"
@@ -28,8 +29,8 @@
 class Communication {
   public:
     Communication() = default;
-    Communication(const Stream* serial, const Pages* pages);
-    Communication(const Stream* serial, const char* code_version, const Pages* pages);
+    Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages);
+    Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages);
     void serialReceive();
   private:
     enum SerialStatus { SERIAL_READY, SERIAL_RECEIVE_PAYLOAD_INPROGRESS,SERIAL_RECEIVE_CRC_INPROGRESS, };
@@ -38,6 +39,7 @@ class Communication {
     const char* _protocol_version;
     const Stream* _serial;
     const Pages* _pages;
+    const Rt_data* _rt_data;
     const char* _canID = "\x01"; // must be one value
 
     SerialStatus serialStatusFlag = SERIAL_READY;

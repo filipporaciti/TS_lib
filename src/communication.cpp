@@ -1,17 +1,19 @@
 #include "communication.h"
 #include "pages.h"
 #include "rt_data.h"
+#include "rt_data.h"
 #include <CRC32.h>
 #include <Arduino.h>
 
 
-Communication::Communication(const Stream* serial, const Pages* pages)
-	: Communication(serial, DEFAULT_CODE_VERSION, pages) {}
-Communication::Communication(const Stream* serial, const char* code_version, const Pages* pages) {
+Communication::Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages)
+	: Communication(serial, DEFAULT_CODE_VERSION, rt_data, pages) {}
+Communication::Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages) {
 	_code_version = code_version;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
 	_serial = serial;
 	_pages = pages;
+	_rt_data = rt_data;
 }
 
 void Communication::serialReceive() {
@@ -204,9 +206,9 @@ void Communication::sendCRCPage() {
 }
 
 void Communication::sendRealTimeData() {
-	uint8_t data[getRtDataLen()] = {};
+	uint8_t data[_rt_data->getRtDataLen()] = {};
 
-	memcpy(data, getRtData(), getRtDataLen());
+	memcpy(data, _rt_data->getRtData(), _rt_data->getRtDataLen());
 
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
