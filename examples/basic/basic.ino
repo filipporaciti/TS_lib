@@ -13,10 +13,7 @@ TS_lib ts = TS_lib(&Serial, &rt_values, pages);
 
 void setup() {
 	Serial.begin(115200);
-
-	while (Serial.available())
-
-	ts.setRealTimeStruct(&rt_data, sizeof(rt_data));
+	while (Serial.available());
 }
 
 void loop() {

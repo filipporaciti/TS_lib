@@ -22,9 +22,6 @@ void TS_lib::update() {
 	}
 
 }
-void TS_lib::setRealTimeStruct(const void* rt_data, const size_t structLen) {
-
-}
 void TS_lib::setCodeVersion(const char* code_version){
 
 }
