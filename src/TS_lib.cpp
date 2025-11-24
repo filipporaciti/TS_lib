@@ -5,6 +5,7 @@
 TS_lib::TS_lib(const Stream* s1, const Page* pages) {
 	_serial1 = s1;
 	_pages = Pages(pages);
+	_pages.loadStoredPages();
 	_comm = Communication(_serial1, &_pages);
 	_comm_legacy = Communication_legacy(_serial1);
 }

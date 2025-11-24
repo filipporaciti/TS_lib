@@ -55,9 +55,9 @@ class Communication {
     void sendCanID();
     void sendCanInfo();
     void sendChangePageValue();
+    void sendSavePage();
     static void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen);
     static void sendTestComm(const Stream* s);
-    static void sendSavePage(const Stream* s);
     // --------------------------
     static void sendCodeMessage(const Stream* s, const uint8_t code);
 

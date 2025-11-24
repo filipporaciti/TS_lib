@@ -91,7 +91,7 @@ void Communication::processSerialPayload() {
 			sendRealTimeData();
 			break;
 		case 'b': // burn page: 1 page num
-			sendSavePage(_serial);
+			sendSavePage();
 			break;
 		case 'M': // change page value: 1 page num | 2 offset | 2 len | n values
 			sendChangePageValue();
@@ -211,7 +211,14 @@ void Communication::sendRealTimeData() {
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 
-void Communication::sendSavePage(const Stream* s) {
+void Communication::sendSavePage() {
+	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
+	bool ris = _pages->storePage(pageNum);
+	if (ris) {
+		sendCodeMessage(_serial, SERIAL_MSG_BURN_SUCCESS);
+	} else {
+		sendCodeMessage(_serial, SERIAL_MSG_UKNW_COMMAND); // non esiste un code message specifico in caso fallisce il burn
+	}
 }
 
 void Communication::sendChangePageValue() {
