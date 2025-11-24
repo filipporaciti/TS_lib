@@ -20,6 +20,8 @@ class Pages {
     bool loadStoredPages(void);
     bool storePage(uint16_t pageNum);
 
+    bool isIndexOutOfRange(uint16_t pageNum);
+
   private:
     const Page* _pages;
 };

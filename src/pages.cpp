@@ -7,7 +7,7 @@ Pages::Pages(const Page* pages) {
 }
 
 void* Pages::getPageValue(const uint16_t pageNum, const uint16_t offset){
-	if (pageNum > (sizeof(*_pages)/sizeof(Page))) {
+	if (isIndexOutOfRange(pageNum-1)) {
 		return nullptr;
 	}
 	return ((uint8_t*)_pages[pageNum-1].pointer + offset);
@@ -23,14 +23,14 @@ uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
 }
 
 size_t Pages::getPageLen(const uint16_t pageNum){
-	if (pageNum > (sizeof(*_pages)/sizeof(Page))) {
+	if (isIndexOutOfRange(pageNum-1)) {
 		return 0;
 	}
 	return _pages[pageNum-1].len;
 }
 
 bool Pages::storePage(uint16_t pageNum) {
-	if (pageNum > (sizeof(*_pages)/sizeof(Page))) {
+	if (isIndexOutOfRange(pageNum-1)) {
 		return false;
 	}
 	noInterrupts();
@@ -48,5 +48,12 @@ bool Pages::loadStoredPages(void) {
 	    ((uint8_t*)_pages[0].pointer)[i] = EEPROM.read(0+i);
 	}
 	interrupts();
+}
+
+bool Pages::isIndexOutOfRange(uint16_t pageNum) {
+	if (pageNum >= (sizeof(*_pages)/sizeof(Page))) {
+		return true;
+	}
+	return false;
 }
 
