@@ -34,8 +34,16 @@ bool Pages::storePage(uint16_t pageNum) {
 		return false;
 	}
 	noInterrupts();
+	uint8_t index = 0;
+	uint32_t position = 0;
+
+	while (index < (pageNum-1)) {
+		position += _pages[index].len;
+		index++;
+	}
+
 	for (size_t i = 0; i < _pages[pageNum-1].len; i++) {
-	    EEPROM.write(sizeof(Page)*(pageNum-1) + i, ((uint8_t*)_pages[pageNum-1].pointer)[i]);
+	    EEPROM.write(position+i, ((uint8_t*)_pages[pageNum-1].pointer)[i]);
 	}
 	interrupts();
 	return true;
