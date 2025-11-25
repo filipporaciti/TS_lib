@@ -50,7 +50,7 @@ bool Pages::storePage(uint16_t pageNum) {
 }
 
 
-bool Pages::loadStoredPages(void) {
+void Pages::loadStoredPages(void) {
 	noInterrupts();
 	uint8_t index = 0;
 	uint32_t position = 0;
