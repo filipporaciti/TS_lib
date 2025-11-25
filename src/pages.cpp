@@ -44,8 +44,15 @@ bool Pages::storePage(uint16_t pageNum) {
 
 bool Pages::loadStoredPages(void) {
 	noInterrupts();
-	for (size_t i = 0; i < _pages[0].len; i++) {
-	    ((uint8_t*)_pages[0].pointer)[i] = EEPROM.read(0+i);
+	uint8_t index = 0;
+	uint32_t position = 0;
+
+	while (!isIndexOutOfRange(index)) {
+		for (size_t i = 0; i < _pages[index].len; i++) {
+		    ((uint8_t*)_pages[index].pointer)[i] = EEPROM.read(position+i);
+		}
+		position += _pages[index].len;
+		index++;
 	}
 	interrupts();
 }
