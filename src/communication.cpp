@@ -98,10 +98,10 @@ void Communication::processSerialPayload() {
 		case 'M': // change page value: 1 page num | 2 offset | 2 len | n values
 			sendChangePageValue();
 			break;
-		case 'I':
+		case 'I': // send can ID
 			sendCanID();
 			break;
-		case 'f':
+		case 'f': // send can info (serial version - table blocking factor - write blocking factor)
 			sendCanInfo();
 			break;
 		default:

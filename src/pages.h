@@ -17,7 +17,7 @@ class Pages {
 	  uint32_t getPageCRC(const void *page, const size_t pageLen);
 	  size_t getPageLen(const uint16_t pageNum);
 
-    bool loadStoredPages(void);
+    void loadStoredPages(void);
     bool storePage(uint16_t pageNum);
 
     bool isIndexOutOfRange(uint16_t pageNum);
