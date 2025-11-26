@@ -72,3 +72,11 @@ bool Pages::isIndexOutOfRange(uint16_t pageNum) {
 	return false;
 }
 
+
+Page* Pages::getPages(void) {
+	return _pages;
+}
+
+Page* Pages::getPage(const uint16_t pageNum) {
+	return &_pages[pageNum];
+}

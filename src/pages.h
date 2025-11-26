@@ -22,6 +22,9 @@ class Pages {
 
     bool isIndexOutOfRange(uint16_t pageNum);
 
+    Page* getPages(void);
+    Page* getPage(const uint16_t pageNum);
+
   private:
     const Page* _pages;
 };

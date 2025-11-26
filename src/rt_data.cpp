@@ -12,3 +12,7 @@ void* Rt_data::getRtData() {
 size_t Rt_data::getRtDataLen() {
 	return _rt_values->len;
 }
+
+Rt_values* Rt_data::getRtValues(void) {
+	return _rt_values;
+}
