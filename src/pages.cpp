@@ -7,10 +7,10 @@ Pages::Pages(const Page* pages) {
 }
 
 void* Pages::getPageValue(const uint16_t pageNum, const uint16_t offset){
-	if (isIndexOutOfRange(pageNum-1)) {
+	if (isIndexOutOfRange(pageNum)) {
 		return nullptr;
 	}
-	return ((uint8_t*)_pages[pageNum-1].pointer + offset);
+	return ((uint8_t*)_pages[pageNum].pointer + offset);
 }
 
 uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
@@ -23,27 +23,27 @@ uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
 }
 
 size_t Pages::getPageLen(const uint16_t pageNum){
-	if (isIndexOutOfRange(pageNum-1)) {
+	if (isIndexOutOfRange(pageNum)) {
 		return 0;
 	}
-	return _pages[pageNum-1].len;
+	return _pages[pageNum].len;
 }
 
 bool Pages::storePage(uint16_t pageNum) {
-	if (isIndexOutOfRange(pageNum-1)) {
+	if (isIndexOutOfRange(pageNum)) {
 		return false;
 	}
 	noInterrupts();
 	uint8_t index = 0;
 	uint32_t position = 0;
 
-	while (index < (pageNum-1)) {
+	while (index < pageNum) {
 		position += _pages[index].len;
 		index++;
 	}
 
-	for (size_t i = 0; i < _pages[pageNum-1].len; i++) {
-	    EEPROM.write(position+i, ((uint8_t*)_pages[pageNum-1].pointer)[i]);
+	for (size_t i = 0; i < _pages[pageNum].len; i++) {
+	    EEPROM.write(position+i, ((uint8_t*)_pages[pageNum].pointer)[i]);
 	}
 	interrupts();
 	return true;
