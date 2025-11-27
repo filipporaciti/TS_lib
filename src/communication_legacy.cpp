@@ -1,8 +1,6 @@
 #include "communication_legacy.h"
 
 
-Communication_legacy::Communication_legacy(const Stream* serial)
-	: Communication_legacy(serial, DEFAULT_CODE_VERSION) {}
 Communication_legacy::Communication_legacy(const Stream* serial, const char* code_version) {
 	_code_version = code_version;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
@@ -41,4 +39,9 @@ bool Communication_legacy::isLegacy(uint8_t cmd) {
 		}
 	}
 	return false;
+}
+
+
+void Communication_legacy::setCodeVersion(const char* code_version) {
+	_code_version = code_version;
 }

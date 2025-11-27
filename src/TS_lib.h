@@ -9,9 +9,10 @@
 #include "pages.h"
 #include "rt_data.h"
 
+#define DEFAULT_CODE_VERSION "TSlib_11-2025"
+
 class TS_lib {
   public:
-    char* CODE_VERSION = "TSlib_11-2025";
     static char* PROTOCOL_VERSION = "002";
 
     TS_lib(const Stream* s1);
@@ -29,6 +30,7 @@ class TS_lib {
 
     Rt_values* getRtData(void);
   private:
+    char* _code_version = DEFAULT_CODE_VERSION;
     const Stream* _serial1;
     const Communication _comm;
     const Communication_legacy _comm_legacy;
