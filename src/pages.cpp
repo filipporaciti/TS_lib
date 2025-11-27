@@ -66,7 +66,7 @@ void Pages::loadStoredPages(void) {
 }
 
 bool Pages::isIndexOutOfRange(uint16_t pageNum) {
-	if (pageNum > (sizeof(*_pages)/sizeof(Page))) {
+	if (pageNum >= (sizeof(*_pages)/sizeof(Page))) {
 		return true;
 	}
 	return false;
