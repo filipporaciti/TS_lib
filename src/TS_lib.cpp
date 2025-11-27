@@ -5,9 +5,9 @@
 TS_lib::TS_lib(const Stream* s1) 
 	: TS_lib(s1, &Rt_values{}, &Page{}) {} 
 
-TS_lib::TS_lib(const Stream* s1, const Rt_values* rt_data, const Page* pages) {
+TS_lib::TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages) {
 	_serial1 = s1;
-	_rt_data = Rt_data(rt_data);
+	_rt_data = Rt_data(rt_values);
 	_pages = Pages(pages);
 	_pages.loadStoredPages();
 	_comm = Communication(_serial1, DEFAULT_CODE_VERSION, &_rt_data, &_pages);
@@ -39,8 +39,8 @@ void TS_lib::setPages(const Page* pages) {
 	_pages = Pages(pages);
 }
 
-void TS_lib::setRtData(const Rt_values* rt_data) {
-	_rt_data = Rt_data(rt_data);
+void TS_lib::setRtData(const Rt_values* rt_values) {
+	_rt_data.setRtValues(rt_values);
 }
 
 Page* TS_lib::getPages(void) {

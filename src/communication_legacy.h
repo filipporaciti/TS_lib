@@ -16,7 +16,7 @@ class Communication_legacy {
 		void serialReceiveLegacy();
     void setCodeVersion(const char* code_version);
   private:
-    const char* _code_version;
+    char* _code_version;
     const char* _protocol_version;
     const Stream* _serial;
 };
