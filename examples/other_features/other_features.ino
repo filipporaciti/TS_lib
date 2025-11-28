@@ -21,7 +21,7 @@ void setup() {
 
 	Page page_1 = {&p1, sizeof(p1)};
 	Page* pages = new Page[1]{page_1};
-	ts.setPages(pages);
+	ts.setPages(pages, 1);
 
 	ts.getPages();
 	ts.getPage(0);

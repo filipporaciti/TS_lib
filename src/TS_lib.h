@@ -16,13 +16,13 @@ class TS_lib {
     static char* PROTOCOL_VERSION = "002";
 
     TS_lib(const Stream* s1);
-    TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages);
+    TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages, const uint16_t num_pages);
     void update(void);
 
     void setCodeVersion(const char* code_version);
     char* getCodeVersion(void);
 
-    void setPages(const Page* pages);
+    void setPages(const Page* pages, const uint16_t num_pages);
     void setRtData(const Rt_values* rt_values);
 
     Page* getPages(void);

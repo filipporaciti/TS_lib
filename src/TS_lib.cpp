@@ -3,12 +3,12 @@
 #include "communication.h"
 
 TS_lib::TS_lib(const Stream* s1) 
-	: TS_lib(s1, &Rt_values{}, &Page{}) {} 
+	: TS_lib(s1, &Rt_values{}, &Page{}, 0) {} 
 
-TS_lib::TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages) {
+TS_lib::TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages, const uint16_t num_pages) {
 	_serial1 = s1;
 	_rt_data = Rt_data(rt_values);
-	_pages = Pages(pages);
+	_pages = Pages(pages, num_pages);
 	_pages.loadStoredPages();
 	_comm = Communication(_serial1, DEFAULT_CODE_VERSION, &_rt_data, &_pages);
 	_comm_legacy = Communication_legacy(_serial1, DEFAULT_CODE_VERSION);
@@ -35,8 +35,8 @@ char* TS_lib::getCodeVersion(void) {
 	return _code_version;
 }
 
-void TS_lib::setPages(const Page* pages) {
-	_pages.setPages(pages);
+void TS_lib::setPages(const Page* pages, const uint16_t num_pages) {
+	_pages.setPages(pages, num_pages);
 	_pages.loadStoredPages();
 }
 

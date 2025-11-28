@@ -2,8 +2,9 @@
 #include <EEPROM.h>
 #include <CRC32.h>
 
-Pages::Pages(const Page* pages) {
+Pages::Pages(const Page* pages, const uint16_t num_pages) {
 	_pages = pages;
+	_num_pages = num_pages;
 }
 
 void* Pages::getPageValue(const uint16_t pageNum, const uint16_t offset){
@@ -66,8 +67,8 @@ void Pages::loadStoredPages(void) {
 }
 
 bool Pages::isIndexOutOfRange(uint16_t pageNum) {
-	if (sizeof(*_pages) == 0) return true;
-	if (pageNum >= (sizeof(*_pages)/sizeof(Page))) {
+	if (_num_pages == 0) return true;
+	if (pageNum >= _num_pages) {
 		return true;
 	}
 	return false;
@@ -82,7 +83,8 @@ Page* Pages::getPage(const uint16_t pageNum) {
 	return &_pages[pageNum];
 }
 
-void Pages::setPages(const Page* pages) {
+void Pages::setPages(const Page* pages, const uint16_t num_pages) {
 	_pages = pages;
+	_num_pages = num_pages;
 }
 
