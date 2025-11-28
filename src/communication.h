@@ -8,7 +8,6 @@
 #include "pages.h"
 #include "rt_data.h"
 
-#define DEFAULT_CODE_VERSION "TSlib_11-2025"
 #define DEFAULT_PROTOCOL_VERSION "002"
 #define SERIAL_VERSION 2
 #define TABLE_BLOCKING_FACTOR 240
@@ -32,10 +31,11 @@ class Communication {
     Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages);
     Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages);
     void serialReceive();
+    void setCodeVersion(const char* code_version);
   private:
     enum SerialStatus { SERIAL_READY, SERIAL_RECEIVE_PAYLOAD_INPROGRESS,SERIAL_RECEIVE_CRC_INPROGRESS, };
 
-    const char* _code_version;
+    char* _code_version;
     const char* _protocol_version;
     const Stream* _serial;
     const Pages* _pages;
