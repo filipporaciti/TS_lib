@@ -4,28 +4,25 @@
 // create TS_lib object
 TS_lib ts = TS_lib(&Serial);
 
-struct realtime_data rt_data;
-struct page1 p1;
+// create structs
+realtime_data rt_data;
+page1 p1;
 
 void setup() {
 	Serial.begin(115200);
 	while (Serial.available());
 
-
-	// create page object
-
-	struct Page page_1 = {&p1, sizeof(p1)};
-	Page pages[] = {page_1};
-
-	// create realtime object
-	struct Rt_values rt_values = {&rt_data, sizeof(rt_data)};
-
-
 	ts.setCodeVersion("MyCodeVersion_11-2025");
-	ts.setPages(pages);
-	ts.setRtData(&rt_values);
 
-	// you can also get values
+	// WARNING!!! x2 only exists in this scope (setup function); so when loop function will be execute, x2 will no longer exist => crash (same for pages)
+	// Rt_values x2 = Rt_values{&rt_data, sizeof(rt_data)};
+	Rt_values* rt_values = new Rt_values{&rt_data, sizeof(rt_data)};
+	ts.setRtData(rt_values);
+
+	Page page_1 = {&p1, sizeof(p1)};
+	Page* pages = new Page[1]{page_1};
+	ts.setPages(pages);
+
 	ts.getPages();
 	ts.getPage(0);
 	ts.getRtData();
