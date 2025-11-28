@@ -13,7 +13,7 @@ struct realtime_data rt_data;
 struct Rt_values rt_values = {&rt_data, sizeof(rt_data)};
 
 // create TS_lib object
-TS_lib ts = TS_lib(&Serial, &rt_values, pages);
+TS_lib ts = TS_lib(&Serial, &rt_values, pages, 2);
 
 
 void setup() {

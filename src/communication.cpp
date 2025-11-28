@@ -6,8 +6,6 @@
 #include <Arduino.h>
 
 
-Communication::Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages)
-	: Communication(serial, DEFAULT_CODE_VERSION, rt_data, pages) {}
 Communication::Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages) {
 	_code_version = code_version;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
@@ -243,4 +241,8 @@ void Communication::sendChangePageValue() {
 
 
 	sendCodeMessage(_serial, SERIAL_MSG_SUCCESS);
+}
+
+void Communication::setCodeVersion(const char* code_version) {
+	_code_version = code_version;
 }

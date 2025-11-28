@@ -11,7 +11,7 @@ struct Page {
 class Pages {
 	public:
     Pages() = default;
-    Pages(const Page* pages);
+    Pages(const Page* pages, const uint16_t num_pages);
 
     void* getPageValue(const uint16_t pageNum, const uint16_t offset);
 	  uint32_t getPageCRC(const void *page, const size_t pageLen);
@@ -22,8 +22,13 @@ class Pages {
 
     bool isIndexOutOfRange(uint16_t pageNum);
 
+    Page* getPages(void);
+    Page* getPage(const uint16_t pageNum);
+
+    void setPages(const Page* pages, const uint16_t num_pages);
   private:
     const Page* _pages;
+    uint16_t _num_pages;
 };
 
 #endif
