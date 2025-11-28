@@ -19,6 +19,8 @@ class Rt_data {
 
 		Rt_values* getRtValues(void);
 
+		void setRtValues(Rt_values* rt_values);
+
 	private:
 		const Rt_values* _rt_values;
 

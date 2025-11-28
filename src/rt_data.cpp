@@ -16,3 +16,7 @@ size_t Rt_data::getRtDataLen() {
 Rt_values* Rt_data::getRtValues(void) {
 	return _rt_values;
 }
+
+void Rt_data::setRtValues(Rt_values* rt_values) {
+	_rt_values = rt_values;
+}
