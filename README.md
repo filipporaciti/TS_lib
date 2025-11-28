@@ -16,15 +16,44 @@ Tested hardware:
 | ------------- |:--------:|
 | Arduino Nano  | ✅       |
 | Arduino Mega  | |
-| Esp32         | |
+| esp32         | |
 | stm32         | |
 
 
 
 ## ✨ Examples
+Easy example:
+``` cpp
+#include <TS_lib.h>
+#include "structs.h"
 
-(esempio stupido + link ai vari esempi)
+// create page object
+struct page1 p1;
+struct Page page_1 = {&p1, sizeof(p1)};
+Page pages[] = {page_1};
+
+// create realtime object
+struct realtime_data rt_data;
+struct Rt_values rt_values = {&rt_data, sizeof(rt_data)};
+
+// create TS_lib object
+TS_lib ts = TS_lib(&Serial, &rt_values, pages, 1);
+
+
+void setup() {
+	Serial.begin(115200);
+	while (Serial.available());
+}
+
+void loop() {
+	ts.update(); // update serial communication
+}
+```
+
+All examples:
+- [basic](https://github.com/filipporaciti/TS_lib/tree/develop/examples/basic) example
+- [more_pages](https://github.com/filipporaciti/TS_lib/tree/develop/examples/more_pages) example
+- [other_features](https://github.com/filipporaciti/TS_lib/tree/develop/examples/other_features) example
 
 ## 📖 Wiki
-
-(su github puoi mettere una wiki. mettere link)
+Check out the project [wiki](https://github.com/filipporaciti/TS_lib/wiki) for documentation
