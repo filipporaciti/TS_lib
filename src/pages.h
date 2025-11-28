@@ -25,6 +25,7 @@ class Pages {
     Page* getPages(void);
     Page* getPage(const uint16_t pageNum);
 
+    void setPages(const Page* pages);
   private:
     const Page* _pages;
 };

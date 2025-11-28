@@ -81,3 +81,8 @@ Page* Pages::getPages(void) {
 Page* Pages::getPage(const uint16_t pageNum) {
 	return &_pages[pageNum];
 }
+
+void Pages::setPages(const Page* pages) {
+	_pages = pages;
+}
+
