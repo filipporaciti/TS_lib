@@ -49,7 +49,11 @@ Page* TS_lib::getPages(void) {
 }
 
 Page* TS_lib::getPage(const uint16_t pageNum) {
-	_pages.getPage(pageNum);
+	return _pages.getPage(pageNum);
+}
+
+uint16_t TS_lib::getPageNum(void) {
+	return _pages.getPageNum();
 }
 
 Rt_values* TS_lib::getRtData(void) {
