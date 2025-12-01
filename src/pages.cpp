@@ -80,7 +80,14 @@ Page* Pages::getPages(void) {
 }
 
 Page* Pages::getPage(const uint16_t pageNum) {
+	if (isIndexOutOfRange(pageNum)) {
+		return nullptr;
+	}
 	return &_pages[pageNum];
+}
+
+uint16_t Pages::getPageNum(void) {
+	return _num_pages;
 }
 
 void Pages::setPages(const Page* pages, const uint16_t num_pages) {

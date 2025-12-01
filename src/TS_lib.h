@@ -27,6 +27,7 @@ class TS_lib {
 
     Page* getPages(void);
     Page* getPage(const uint16_t pageNum);
+    uint16_t getPageNum(void);
 
     Rt_values* getRtData(void);
   private:
