@@ -1,5 +1,5 @@
 # TS_lib
-This library can be used to connect Arduino (or other kind of microcontrollers) to TunerStudio software.
+This library can be used to connect Arduino (or other kind of microcontrollers) to [TunerStudio](https://www.tunerstudio.com/index.php/tuner-studio) software.
 
 This library manage communication protocol ([MegaSquirt](https://www.msextra.com/doc/pdf/Megasquirt_Serial_Protocol-2014-10-28.pdf)). 
 You have to define ECU definition firmware for TunerStudio ([doc](https://www.efianalytics.com/TunerStudio/docs/EFI%20Analytics%20ECU%20Definition%20files.pdf)).
@@ -51,9 +51,9 @@ void loop() {
 ```
 
 All examples:
-- [basic](https://github.com/filipporaciti/TS_lib/tree/develop/examples/basic) example
-- [more_pages](https://github.com/filipporaciti/TS_lib/tree/develop/examples/more_pages) example
-- [other_features](https://github.com/filipporaciti/TS_lib/tree/develop/examples/other_features) example
+- [basic](https://github.com/filipporaciti/TS_lib/tree/develop/examples/basic)
+- [more_pages](https://github.com/filipporaciti/TS_lib/tree/develop/examples/more_pages)
+- [other_features](https://github.com/filipporaciti/TS_lib/tree/develop/examples/other_features)
 
 ## 📖 Wiki
-Check out the project [wiki](https://github.com/filipporaciti/TS_lib/wiki) for documentation
+Check out the project [wiki](https://github.com/filipporaciti/TS_lib/wiki) for documentation.
