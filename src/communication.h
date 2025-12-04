@@ -30,8 +30,9 @@ class Communication {
     Communication() = default;
     Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages);
     Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages);
-    void serialReceive();
+    void serialReceive(void);
     void setCodeVersion(const char* code_version);
+    bool isReady(void);
   private:
     enum SerialStatus { SERIAL_READY, SERIAL_RECEIVE_PAYLOAD_INPROGRESS,SERIAL_RECEIVE_CRC_INPROGRESS, };
 

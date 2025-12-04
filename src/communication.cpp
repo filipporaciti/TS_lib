@@ -110,26 +110,26 @@ void Communication::processSerialPayload() {
 
 void Communication::sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen) {
 	uint8_t header[2];
-  header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
-  header[1] = (payloadLen + 1) & 0xFF;
+	header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
+	header[1] = (payloadLen + 1) & 0xFF;
 
-  // Calcola CRC anche includendo il flag
-  uint32_t crc;
-  
-  CRC32 crcCalc;
-  crcCalc.update(&flag, 1);
-  crcCalc.update(payload, payloadLen);
-  crc = crcCalc.finalize();
+	// Calcola CRC anche includendo il flag
+	uint32_t crc;
 
-  // --- Invio ---
-  s->write(header, 2);        // dimensione totale (2 byte)
-  s->write(&flag, 1);
-  s->write(payload, payloadLen); // dati veri e propri
-  s->write((crc >> 24) & 0xFF);
-  s->write((crc >> 16) & 0xFF);
-  s->write((crc >> 8) & 0xFF);
-  s->write(crc & 0xFF);
-  s->flush();
+	CRC32 crcCalc;
+	crcCalc.update(&flag, 1);
+	crcCalc.update(payload, payloadLen);
+	crc = crcCalc.finalize();
+
+	// --- Invio ---
+	s->write(header, 2);        // dimensione totale (2 byte)
+	s->write(&flag, 1);
+	s->write(payload, payloadLen); // dati veri e propri
+	s->write((crc >> 24) & 0xFF);
+	s->write((crc >> 16) & 0xFF);
+	s->write((crc >> 8) & 0xFF);
+	s->write(crc & 0xFF);
+	s->flush();
 }
 
 void Communication::sendCodeMessage(const Stream* s, const uint8_t code) {
@@ -137,10 +137,10 @@ void Communication::sendCodeMessage(const Stream* s, const uint8_t code) {
 	sendMessage(s, code, data, sizeof(data));
 }
 void Communication::sendCodeVersion() {
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, _code_version, sizeof(_code_version)-1); // -1 per il terminatore finale
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, _code_version, strlen(_code_version));
 }
 void Communication::sendSerialProtocolVersion() {
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, _protocol_version, sizeof(_protocol_version)-1);
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, _protocol_version, strlen(_protocol_version));
 }
 void Communication::sendTestComm(const Stream* s) {
 	uint8_t data[] = {0xFF};
@@ -245,4 +245,8 @@ void Communication::sendChangePageValue() {
 
 void Communication::setCodeVersion(const char* code_version) {
 	_code_version = code_version;
+}
+
+bool Communication::isReady(void) {
+	return serialStatusFlag == SERIAL_READY;
 }

@@ -16,7 +16,7 @@ TS_lib::TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages, 
 
 void TS_lib::update() {
 	if (_serial1->available() > 0) {
-		if (_comm_legacy.isLegacy(_serial1->peek())) {
+		if (_comm.isReady() && _comm_legacy.isLegacy(_serial1->peek())) {
 			_comm_legacy.serialReceiveLegacy();
 		} else {
 			_comm.serialReceive();
