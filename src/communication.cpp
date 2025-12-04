@@ -246,3 +246,7 @@ void Communication::sendChangePageValue() {
 void Communication::setCodeVersion(const char* code_version) {
 	_code_version = code_version;
 }
+
+bool Communication::isReady(void) {
+	return serialStatusFlag == SERIAL_READY;
+}
