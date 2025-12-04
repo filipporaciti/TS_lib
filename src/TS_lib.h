@@ -15,6 +15,7 @@ class TS_lib {
   public:
     static char* PROTOCOL_VERSION = "002";
 
+    TS_lib() = default;
     TS_lib(const Stream* s1);
     TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages, const uint16_t num_pages);
     void update(void);
