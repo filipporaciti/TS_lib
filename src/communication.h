@@ -37,7 +37,7 @@ class Communication {
     enum SerialStatus { SERIAL_READY, SERIAL_RECEIVE_PAYLOAD_INPROGRESS,SERIAL_RECEIVE_CRC_INPROGRESS, };
 
     char* _code_version;
-    char* _protocol_version;
+    const char* _protocol_version;
     Stream* _serial;
     Pages* _pages;
     Rt_data* _rt_data;
