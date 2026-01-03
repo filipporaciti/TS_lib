@@ -28,20 +28,20 @@
 class Communication {
   public:
     Communication() = default;
-    Communication(const Stream* serial, const Rt_data* rt_data, const Pages* pages);
-    Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages);
+    Communication(Stream* serial, Rt_data* rt_data, Pages* pages);
+    Communication(Stream* serial, char* code_version, Rt_data* rt_data, Pages* pages);
     void serialReceive(void);
-    void setCodeVersion(const char* code_version);
+    void setCodeVersion(char* code_version);
     bool isReady(void);
   private:
     enum SerialStatus { SERIAL_READY, SERIAL_RECEIVE_PAYLOAD_INPROGRESS,SERIAL_RECEIVE_CRC_INPROGRESS, };
 
     char* _code_version;
     const char* _protocol_version;
-    const Stream* _serial;
-    const Pages* _pages;
-    const Rt_data* _rt_data;
-    const char* _canID = "\x01"; // must be one value
+    Stream* _serial;
+    Pages* _pages;
+    Rt_data* _rt_data;
+    uint8_t _canID = 1; // must be one value
 
     SerialStatus serialStatusFlag = SERIAL_READY;
     uint16_t serialPayloadLen = 0;
@@ -59,10 +59,10 @@ class Communication {
     void sendCanInfo();
     void sendChangePageValue();
     void sendSavePage();
-    static void sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen);
-    static void sendTestComm(const Stream* s);
+    static void sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsigned long payloadLen);
+    static void sendTestComm(Stream* s);
     // --------------------------
-    static void sendCodeMessage(const Stream* s, const uint8_t code);
+    static void sendCodeMessage(Stream* s, uint8_t code);
 
 };
 
