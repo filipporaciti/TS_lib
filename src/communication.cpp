@@ -52,10 +52,10 @@ void Communication::serialReceive() {
 	if (serialStatusFlag == SERIAL_RECEIVE_CRC_INPROGRESS && _serial->available() >= 4) {
 		uint32_t crc = CRC32::calculate(serialReceiveBuffer, serialBufferIndex);
 
-		if (_serial->read() != ((crc >> 24) & 0xFF) || 
-		_serial->read() != ((crc >> 16) & 0xFF) || 
-		_serial->read() != ((crc >> 8) & 0xFF) || 
-		_serial->read() != (crc & 0xFF)) {
+		if ((uint8_t)_serial->read() != ((crc >> 24) & 0xFF) || 
+		(uint8_t)_serial->read() != ((crc >> 16) & 0xFF) || 
+		(uint8_t)_serial->read() != ((crc >> 8) & 0xFF) || 
+		(uint8_t)_serial->read() != (crc & 0xFF)) {
 			sendCodeMessage(_serial, SERIAL_MSG_WRONG_CRC);
 		} else {
 			processSerialPayload();
@@ -108,7 +108,7 @@ void Communication::processSerialPayload() {
 	}
 }
 
-void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, uint16_t payloadLen) {
+void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsigned long payloadLen) {
 	uint8_t header[2];
 	header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
 	header[1] = (payloadLen + 1) & 0xFF;
@@ -137,22 +137,22 @@ void Communication::sendCodeMessage(Stream* s, uint8_t code) {
 	sendMessage(s, code, data, sizeof(data));
 }
 void Communication::sendCodeVersion() {
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, _code_version, strlen(_code_version));
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, (uint8_t*)_code_version, strlen(_code_version));
 }
 void Communication::sendSerialProtocolVersion() {
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, _protocol_version, strlen(_protocol_version));
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, (uint8_t*)_protocol_version, strlen(_protocol_version));
 }
 void Communication::sendTestComm(Stream* s) {
 	uint8_t data[] = {0xFF};
 	sendMessage(s, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
 void Communication::sendCanID() {
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, _canID, sizeof(_canID));
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, &_canID, 1);
 }
 
 void Communication::sendCanInfo() {
-	if (serialReceiveBuffer[1] == _canID[0]) {
-		char payload[5];
+	if (serialReceiveBuffer[1] == _canID) {
+		uint8_t payload[5];
 		payload[0] = SERIAL_VERSION;
 		payload[1] = (TABLE_BLOCKING_FACTOR >> 8);
 		payload[2] = (TABLE_BLOCKING_FACTOR) & 0xFF;
@@ -206,7 +206,9 @@ void Communication::sendCRCPage() {
 void Communication::sendRealTimeData() {
 	uint8_t data[_rt_data->getRtDataLen()] = {};
 
-	memcpy(data, _rt_data->getRtData(), _rt_data->getRtDataLen());
+	if (_rt_data->getRtData() != nullptr) {
+		memcpy(data, _rt_data->getRtData(), _rt_data->getRtDataLen());
+	}
 
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }

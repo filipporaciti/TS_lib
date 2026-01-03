@@ -41,7 +41,7 @@ class Communication {
     Stream* _serial;
     Pages* _pages;
     Rt_data* _rt_data;
-    char* _canID = "\x01"; // must be one value
+    uint8_t _canID = 1; // must be one value
 
     SerialStatus serialStatusFlag = SERIAL_READY;
     uint16_t serialPayloadLen = 0;
@@ -59,7 +59,7 @@ class Communication {
     void sendCanInfo();
     void sendChangePageValue();
     void sendSavePage();
-    static void sendMessage(Stream* s, uint8_t flag, uint8_t *payload, uint16_t payloadLen);
+    static void sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsigned long payloadLen);
     static void sendTestComm(Stream* s);
     // --------------------------
     static void sendCodeMessage(Stream* s, uint8_t code);
