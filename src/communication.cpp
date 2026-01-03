@@ -6,7 +6,7 @@
 #include <Arduino.h>
 
 
-Communication::Communication(const Stream* serial, const char* code_version, const Rt_data* rt_data, const Pages* pages) {
+Communication::Communication(Stream* serial, char* code_version, Rt_data* rt_data, Pages* pages) {
 	_code_version = code_version;
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
 	_serial = serial;
@@ -108,7 +108,7 @@ void Communication::processSerialPayload() {
 	}
 }
 
-void Communication::sendMessage(const Stream* s, const uint8_t flag, const uint8_t *payload, const uint16_t payloadLen) {
+void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, uint16_t payloadLen) {
 	uint8_t header[2];
 	header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
 	header[1] = (payloadLen + 1) & 0xFF;
@@ -132,7 +132,7 @@ void Communication::sendMessage(const Stream* s, const uint8_t flag, const uint8
 	s->flush();
 }
 
-void Communication::sendCodeMessage(const Stream* s, const uint8_t code) {
+void Communication::sendCodeMessage(Stream* s, uint8_t code) {
 	uint8_t data[0] = {};
 	sendMessage(s, code, data, sizeof(data));
 }
@@ -142,7 +142,7 @@ void Communication::sendCodeVersion() {
 void Communication::sendSerialProtocolVersion() {
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, _protocol_version, strlen(_protocol_version));
 }
-void Communication::sendTestComm(const Stream* s) {
+void Communication::sendTestComm(Stream* s) {
 	uint8_t data[] = {0xFF};
 	sendMessage(s, SERIAL_MSG_SUCCESS, data, sizeof(data));
 }
@@ -243,7 +243,7 @@ void Communication::sendChangePageValue() {
 	sendCodeMessage(_serial, SERIAL_MSG_SUCCESS);
 }
 
-void Communication::setCodeVersion(const char* code_version) {
+void Communication::setCodeVersion(char* code_version) {
 	_code_version = code_version;
 }
 

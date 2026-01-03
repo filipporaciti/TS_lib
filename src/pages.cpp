@@ -2,19 +2,19 @@
 #include <EEPROM.h>
 #include <CRC32.h>
 
-Pages::Pages(const Page* pages, const uint16_t num_pages) {
+Pages::Pages(Page* pages, uint16_t num_pages) {
 	_pages = pages;
 	_num_pages = num_pages;
 }
 
-void* Pages::getPageValue(const uint16_t pageNum, const uint16_t offset){
+void* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
 	if (isIndexOutOfRange(pageNum)) {
 		return nullptr;
 	}
 	return ((uint8_t*)_pages[pageNum].pointer + offset);
 }
 
-uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
+uint32_t Pages::getPageCRC(void *page, size_t pageLen){
 	uint32_t crc;
  	CRC32 crcCalc;
  	crcCalc.update(page, pageLen);
@@ -23,7 +23,7 @@ uint32_t Pages::getPageCRC(const void *page, const size_t pageLen){
  	return crc;
 }
 
-size_t Pages::getPageLen(const uint16_t pageNum){
+size_t Pages::getPageLen(uint16_t pageNum){
 	if (isIndexOutOfRange(pageNum)) {
 		return 0;
 	}
@@ -79,7 +79,7 @@ Page* Pages::getPages(void) {
 	return _pages;
 }
 
-Page* Pages::getPage(const uint16_t pageNum) {
+Page* Pages::getPage(uint16_t pageNum) {
 	if (isIndexOutOfRange(pageNum)) {
 		return nullptr;
 	}
@@ -90,7 +90,7 @@ uint16_t Pages::getPageNum(void) {
 	return _num_pages;
 }
 
-void Pages::setPages(const Page* pages, const uint16_t num_pages) {
+void Pages::setPages(Page* pages, uint16_t num_pages) {
 	_pages = pages;
 	_num_pages = num_pages;
 }

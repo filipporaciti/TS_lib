@@ -5,15 +5,15 @@
 #include <Arduino.h>
 
 struct Rt_values {
-  const void* pointer;
-  const size_t len;
+  void* pointer;
+  size_t len;
 };
 
 class Rt_data {
 	
 	public:
 		Rt_data() = default;
-		Rt_data(const Rt_values* rt_values);
+		Rt_data(Rt_values* rt_values);
 		void* getRtData(void);
 		size_t getRtDataLen(void);
 
@@ -22,7 +22,7 @@ class Rt_data {
 		void setRtValues(Rt_values* rt_values);
 
 	private:
-		const Rt_values* _rt_values;
+		Rt_values* _rt_values;
 
 };
 

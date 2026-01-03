@@ -2,10 +2,10 @@
 #include "Arduino.h"
 #include "communication.h"
 
-TS_lib::TS_lib(const Stream* s1) 
+TS_lib::TS_lib(Stream* s1) 
 	: TS_lib(s1, &Rt_values{}, &Page{}, 0) {} 
 
-TS_lib::TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages, const uint16_t num_pages) {
+TS_lib::TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages) {
 	_serial1 = s1;
 	_rt_data = Rt_data(rt_values);
 	_pages = Pages(pages, num_pages);
@@ -25,7 +25,7 @@ void TS_lib::update() {
 }
 
 
-void TS_lib::setCodeVersion(const char* code_version) {
+void TS_lib::setCodeVersion(char* code_version) {
 	_code_version = code_version;
 	_comm.setCodeVersion(code_version);
 	_comm_legacy.setCodeVersion(code_version);
@@ -35,12 +35,12 @@ char* TS_lib::getCodeVersion(void) {
 	return _code_version;
 }
 
-void TS_lib::setPages(const Page* pages, const uint16_t num_pages) {
+void TS_lib::setPages(Page* pages, uint16_t num_pages) {
 	_pages.setPages(pages, num_pages);
 	_pages.loadStoredPages();
 }
 
-void TS_lib::setRtData(const Rt_values* rt_values) {
+void TS_lib::setRtData(Rt_values* rt_values) {
 	_rt_data.setRtValues(rt_values);
 }
 
@@ -48,7 +48,7 @@ Page* TS_lib::getPages(void) {
 	return _pages.getPages();
 }
 
-Page* TS_lib::getPage(const uint16_t pageNum) {
+Page* TS_lib::getPage(uint16_t pageNum) {
 	return _pages.getPage(pageNum);
 }
 
