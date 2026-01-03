@@ -2,6 +2,8 @@
 #include "Arduino.h"
 #include "communication.h"
 
+char DEFAULT_CODE_VERSION[] = "TSlib_11-2025";
+
 TS_lib::TS_lib(Stream* s1) 
 	: TS_lib(s1, nullptr, nullptr, 0) {} 
 

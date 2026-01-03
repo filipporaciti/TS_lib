@@ -9,12 +9,10 @@
 #include "pages.h"
 #include "rt_data.h"
 
-#define DEFAULT_CODE_VERSION "TSlib_11-2025"
+extern char DEFAULT_CODE_VERSION[];
 
 class TS_lib {
   public:
-    static char* PROTOCOL_VERSION = "002";
-
     TS_lib() = default;
     TS_lib(Stream* s1);
     TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages);
