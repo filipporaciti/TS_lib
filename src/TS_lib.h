@@ -9,35 +9,33 @@
 #include "pages.h"
 #include "rt_data.h"
 
-#define DEFAULT_CODE_VERSION "TSlib_11-2025"
+extern char DEFAULT_CODE_VERSION[];
 
 class TS_lib {
   public:
-    static char* PROTOCOL_VERSION = "002";
-
     TS_lib() = default;
-    TS_lib(const Stream* s1);
-    TS_lib(const Stream* s1, const Rt_values* rt_values, const Page* pages, const uint16_t num_pages);
+    TS_lib(Stream* s1);
+    TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages);
     void update(void);
 
-    void setCodeVersion(const char* code_version);
+    void setCodeVersion(char* code_version);
     char* getCodeVersion(void);
 
-    void setPages(const Page* pages, const uint16_t num_pages);
-    void setRtData(const Rt_values* rt_values);
+    void setPages(Page* pages, uint16_t num_pages);
+    void setRtData(Rt_values* rt_values);
 
     Page* getPages(void);
-    Page* getPage(const uint16_t pageNum);
+    Page* getPage(uint16_t pageNum);
     uint16_t getPageNum(void);
 
     Rt_values* getRtData(void);
   private:
     char* _code_version = DEFAULT_CODE_VERSION;
-    const Stream* _serial1;
-    const Communication _comm;
-    const Communication_legacy _comm_legacy;
-    const Pages _pages;
-    const Rt_data _rt_data;
+    Stream* _serial1;
+    Communication _comm;
+    Communication_legacy _comm_legacy;
+    Pages _pages;
+    Rt_data _rt_data;
 };
 
 #endif
