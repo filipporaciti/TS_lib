@@ -15,6 +15,8 @@ void* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
 }
 
 uint32_t Pages::getPageCRC(void *page, size_t pageLen){
+	if (_pages == nullptr) return 0;
+
 	uint32_t crc;
  	CRC32 crcCalc;
  	crcCalc.update(page, pageLen);
@@ -67,6 +69,7 @@ void Pages::loadStoredPages(void) {
 }
 
 bool Pages::isIndexOutOfRange(uint16_t pageNum) {
+	if (_pages == nullptr) return true;
 	if (_num_pages == 0) return true;
 	if (pageNum >= _num_pages) {
 		return true;

@@ -3,7 +3,7 @@
 #include "communication.h"
 
 TS_lib::TS_lib(Stream* s1) 
-	: TS_lib(s1, &Rt_values{}, &Page{}, 0) {} 
+	: TS_lib(s1, nullptr, nullptr, 0) {} 
 
 TS_lib::TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages) {
 	_serial1 = s1;
