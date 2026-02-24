@@ -7,7 +7,6 @@ MockStream mockStream;
 TS_lib ts(&mockStream);
 
 void setUp(void) {
-
   mockStream.clear();
 }
 
@@ -21,12 +20,20 @@ void test_code_version_command(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("TSlib_11-2025"));
 }
 
+void test_code_version2_command(void) {
+  mockStream.pushByte('S');
+  ts.update();
+
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("TSlib_11-2025"));
+}
+
 
 void setup() {
 
   UNITY_BEGIN();
   
   RUN_TEST(test_code_version_command);
+  RUN_TEST(test_code_version2_command);
   
   UNITY_END();
 }
