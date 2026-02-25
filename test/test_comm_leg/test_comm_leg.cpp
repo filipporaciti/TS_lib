@@ -1,10 +1,11 @@
 #include <Arduino.h>
 #include <unity.h>
 #include <mock_stream.cpp>
+#include "communication_legacy.h"
 #include "TS_lib.h"
 
 MockStream mockStream;
-TS_lib ts(&mockStream);
+Communication_legacy comm(&mockStream, DEFAULT_CODE_VERSION);
 
 void setUp(void) {
   mockStream.clear();
@@ -15,14 +16,14 @@ void tearDown(void) {}
 
 void test_code_version_command(void) {
   mockStream.pushByte('Q');
-  ts.update();
+  comm.serialReceiveLegacy();
 
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
 }
 
 void test_code_version2_command(void) {
   mockStream.pushByte('S');
-  ts.update();
+  comm.serialReceiveLegacy();
 
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
 }
