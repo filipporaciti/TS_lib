@@ -15,11 +15,15 @@ void setUp(void) {
 void tearDown(void) {}
 
 
-void test_code_version_command(void) {
+void check_codeVersion(String code_version) {
   mockStream.pushByte('Q');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(code_version));
+}
+
+void test_code_version_command(void) {
+  check_codeVersion(DEFAULT_CODE_VERSION);
 }
 
 void test_code_version2_command(void) {
@@ -40,10 +44,7 @@ void test_two_param_constructor(void) {
   char custom_code_version[] = "sdsa67678ASHGFAds";
   comm = Communication_legacy(&mockStream, custom_code_version);
 
-  mockStream.pushByte('Q');
-  comm.serialReceiveLegacy();
-
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(custom_code_version));
+  check_codeVersion(custom_code_version);
 }
 
 void test_is_legacy(void) {
@@ -62,10 +63,7 @@ void test_set_code_version(void) {
   char new_code_version[] = "asd89SDA())=/d";
   comm.setCodeVersion(new_code_version);
 
-  mockStream.pushByte('Q');
-  comm.serialReceiveLegacy();
-
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(new_code_version));
+  check_codeVersion(new_code_version);
 }
 
 void test_codeVersion_escaping(void) {
@@ -73,20 +71,14 @@ void test_codeVersion_escaping(void) {
   comm.setCodeVersion(new_code_version);
 
   new_code_version[4] = 'f';
-  mockStream.pushByte('Q');
-  comm.serialReceiveLegacy();
-
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("HIIII pippo"));
+  check_codeVersion("HIIII pippo");
 }
 
 void test_codeVersion_limit(void) {
   char long_code_version[] = "1234567890123456789012345678901234567890123456789012345678901234";
   comm.setCodeVersion(long_code_version);
 
-  mockStream.pushByte('Q');
-  comm.serialReceiveLegacy();
-
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("123456789012345678901234567890123456789012345678901234567890123"));
+  check_codeVersion("123456789012345678901234567890123456789012345678901234567890123");
   TEST_ASSERT_EQUAL(63, mockStream.getTxBuffer().length());
 }
 
