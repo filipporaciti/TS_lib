@@ -193,9 +193,14 @@ void Communication::sendCRCPage() {
 	size_t pageLen = _pages->getPageLen(pageNum);
 	uint32_t crc = _pages->getPageCRC(first_byte, pageLen);
 
-  uint8_t data[4];
+	if (crc == 0) {
+		sendCodeMessage(_serial, SERIAL_MSG_WRONG_CRC);
+		return;
+	}
 
-  data[0] = (crc >> 24) & 0xFF;
+	uint8_t data[4];
+
+	data[0] = (crc >> 24) & 0xFF;
 	data[1] = (crc >> 16) & 0xFF;
 	data[2] = (crc >> 8) & 0xFF;
 	data[3] = crc & 0xFF;   
