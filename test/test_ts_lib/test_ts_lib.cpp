@@ -24,11 +24,20 @@ void test_set_code_version(void) {
   TEST_ASSERT_EQUAL_STRING(new_code_version, code_version);
 }
 
+void test_code_version_ref_escape(void) {
+  char new_code_version[] = "ds798DSAGD%&$/ds";
+  ts.setCodeVersion(new_code_version);
+  new_code_version[4] = 'X';
+  char* code_version = ts.getCodeVersion();
+  TEST_ASSERT_EQUAL_STRING("ds798DSAGD%&$/ds", code_version);
+}
+
 void setup() {
   UNITY_BEGIN();
 
   RUN_TEST(test_code_version);
   RUN_TEST(test_set_code_version);
+  RUN_TEST(test_code_version_ref_escape);
 
   UNITY_END();
 }
