@@ -1,5 +1,12 @@
 #include "communication_legacy.h"
+#include "TS_lib.h"
 
+
+Communication_legacy::Communication_legacy(Stream* serial) {
+	_code_version = DEFAULT_CODE_VERSION;
+	_protocol_version = DEFAULT_PROTOCOL_VERSION;
+	_serial = serial;
+}
 
 Communication_legacy::Communication_legacy(Stream* serial, char* code_version) {
 	_code_version = code_version;

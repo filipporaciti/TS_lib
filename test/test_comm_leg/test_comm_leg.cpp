@@ -5,7 +5,7 @@
 #include "TS_lib.h"
 
 MockStream mockStream;
-Communication_legacy comm(&mockStream, DEFAULT_CODE_VERSION);
+Communication_legacy comm(&mockStream);
 
 void setUp(void) {
   mockStream.clear();
