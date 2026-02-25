@@ -46,6 +46,13 @@ void test_two_param_constructor(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(custom_code_version));
 }
 
+void test_is_legacy(void) {
+  TEST_ASSERT_TRUE(Communication_legacy::isLegacy('Q'));
+  TEST_ASSERT_TRUE(Communication_legacy::isLegacy('S'));
+  TEST_ASSERT_TRUE(Communication_legacy::isLegacy('F'));
+  TEST_ASSERT_FALSE(Communication_legacy::isLegacy('X'));
+}
+
 
 void setup() {
 
@@ -55,6 +62,7 @@ void setup() {
   RUN_TEST(test_code_version2_command);
   RUN_TEST(test_protocol_version_command);
   RUN_TEST(test_two_param_constructor);
+  RUN_TEST(test_is_legacy);
 
   UNITY_END();
 }
