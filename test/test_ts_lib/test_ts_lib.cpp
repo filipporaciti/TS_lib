@@ -8,6 +8,7 @@ TS_lib ts(&mockStream);
 
 void setUp(void) {
   mockStream.clear();
+  ts = TS_lib(&mockStream);
 }
 
 void tearDown(void) {}
@@ -39,6 +40,12 @@ void test_code_version_limit(void) {
   TEST_ASSERT_EQUAL_STRING("123456789012345678901234567890123456789012345678901234567890123", code_version);
 }
 
+void test_code_version_ref_escape2(void) {
+  char* code_version = ts.getCodeVersion();
+  code_version[4] = 'X';
+  TEST_ASSERT_EQUAL_STRING(DEFAULT_CODE_VERSION, ts.getCodeVersion());
+}
+
 void setup() {
   UNITY_BEGIN();
 
@@ -46,6 +53,7 @@ void setup() {
   RUN_TEST(test_set_code_version);
   RUN_TEST(test_code_version_ref_escape);
   RUN_TEST(test_code_version_limit);
+  RUN_TEST(test_code_version_ref_escape2);
 
   UNITY_END();
 }

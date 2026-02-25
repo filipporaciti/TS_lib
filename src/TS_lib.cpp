@@ -31,13 +31,16 @@ void TS_lib::update() {
 void TS_lib::setCodeVersion(char* code_version) {
 	strncpy(_code_version, code_version, sizeof(_code_version) - 1);
 	_code_version[sizeof(_code_version) - 1] = '\0';
-	
+
 	_comm.setCodeVersion(code_version);
 	_comm_legacy.setCodeVersion(code_version);
 }
 
 char* TS_lib::getCodeVersion(void) {
-	return _code_version;
+	char* code_version_copy = new char[sizeof(_code_version)];
+	strncpy(code_version_copy, _code_version, sizeof(_code_version));
+	code_version_copy[sizeof(_code_version) - 1] = '\0';
+	return code_version_copy;
 }
 
 void TS_lib::setPages(Page* pages, uint16_t num_pages) {
