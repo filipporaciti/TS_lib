@@ -29,6 +29,8 @@ void TS_lib::update() {
 
 
 void TS_lib::setCodeVersion(char* code_version) {
+	if (code_version == nullptr) code_version = (char*)"";
+	
 	strncpy(_code_version, code_version, sizeof(_code_version) - 1);
 	_code_version[sizeof(_code_version) - 1] = '\0';
 
