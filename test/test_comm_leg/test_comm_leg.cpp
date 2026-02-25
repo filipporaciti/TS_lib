@@ -53,6 +53,11 @@ void test_is_legacy(void) {
   TEST_ASSERT_FALSE(Communication_legacy::isLegacy('X'));
 }
 
+void test_serialReceiveLegacy_no_data(void) {
+  comm.serialReceiveLegacy();
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(""));
+}
+
 
 void setup() {
 
@@ -63,6 +68,7 @@ void setup() {
   RUN_TEST(test_protocol_version_command);
   RUN_TEST(test_two_param_constructor);
   RUN_TEST(test_is_legacy);
+  RUN_TEST(test_serialReceiveLegacy_no_data);
 
   UNITY_END();
 }
