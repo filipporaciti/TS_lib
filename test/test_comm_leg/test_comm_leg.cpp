@@ -9,6 +9,7 @@ Communication_legacy comm(&mockStream);
 
 void setUp(void) {
   mockStream.clear();
+  comm = Communication_legacy(&mockStream);
 }
 
 void tearDown(void) {}
@@ -35,6 +36,16 @@ void test_protocol_version_command(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_PROTOCOL_VERSION));
 }
 
+void test_two_param_constructor(void) {
+  char custom_code_version[] = "sdsa67678ASHGFAds";
+  comm = Communication_legacy(&mockStream, custom_code_version);
+
+  mockStream.pushByte('Q');
+  comm.serialReceiveLegacy();
+
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(custom_code_version));
+}
+
 
 void setup() {
 
@@ -43,7 +54,8 @@ void setup() {
   RUN_TEST(test_code_version_command);
   RUN_TEST(test_code_version2_command);
   RUN_TEST(test_protocol_version_command);
-  
+  RUN_TEST(test_two_param_constructor);
+
   UNITY_END();
 }
 
