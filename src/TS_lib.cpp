@@ -1,5 +1,5 @@
 #include "TS_lib.h"
-#include "Arduino.h"
+#include <Arduino.h>
 #include "communication.h"
 
 char DEFAULT_CODE_VERSION[] = "TSlib_11-2025";
