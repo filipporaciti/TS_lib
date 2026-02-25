@@ -68,6 +68,17 @@ void test_set_code_version(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(new_code_version));
 }
 
+void test_codeVersion_escaping(void) {
+  char new_code_version[] = "HIIII pippo";
+  comm.setCodeVersion(new_code_version);
+
+  new_code_version[4] = 'f';
+  mockStream.pushByte('Q');
+  comm.serialReceiveLegacy();
+
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("HIIII pippo"));
+}
+
 void setup() {
 
   UNITY_BEGIN();
@@ -79,6 +90,7 @@ void setup() {
   RUN_TEST(test_is_legacy);
   RUN_TEST(test_serialReceiveLegacy_no_data);
   RUN_TEST(test_set_code_version);
+  RUN_TEST(test_codeVersion_escaping);
 
   UNITY_END();
 }
