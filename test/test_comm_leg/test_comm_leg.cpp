@@ -58,6 +58,15 @@ void test_serialReceiveLegacy_no_data(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(""));
 }
 
+void test_set_code_version(void) {
+  char new_code_version[] = "asd89SDA())=/d";
+  comm.setCodeVersion(new_code_version);
+
+  mockStream.pushByte('Q');
+  comm.serialReceiveLegacy();
+
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(new_code_version));
+}
 
 void setup() {
 
@@ -69,6 +78,7 @@ void setup() {
   RUN_TEST(test_two_param_constructor);
   RUN_TEST(test_is_legacy);
   RUN_TEST(test_serialReceiveLegacy_no_data);
+  RUN_TEST(test_set_code_version);
 
   UNITY_END();
 }
