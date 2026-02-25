@@ -28,6 +28,13 @@ void test_code_version2_command(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
 }
 
+void test_protocol_version_command(void) {
+  mockStream.pushByte('F');
+  comm.serialReceiveLegacy();
+
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_PROTOCOL_VERSION));
+}
+
 
 void setup() {
 
@@ -35,6 +42,7 @@ void setup() {
   
   RUN_TEST(test_code_version_command);
   RUN_TEST(test_code_version2_command);
+  RUN_TEST(test_protocol_version_command);
   
   UNITY_END();
 }
