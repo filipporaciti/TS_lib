@@ -17,14 +17,14 @@ void test_code_version_command(void) {
   mockStream.pushByte('Q');
   ts.update();
 
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("TSlib_11-2025"));
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
 }
 
 void test_code_version2_command(void) {
   mockStream.pushByte('S');
   ts.update();
 
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("TSlib_11-2025"));
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
 }
 
 
