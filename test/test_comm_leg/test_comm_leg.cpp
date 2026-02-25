@@ -79,6 +79,17 @@ void test_codeVersion_escaping(void) {
   TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("HIIII pippo"));
 }
 
+void test_codeVersion_limit(void) {
+  char long_code_version[] = "1234567890123456789012345678901234567890123456789012345678901234";
+  comm.setCodeVersion(long_code_version);
+
+  mockStream.pushByte('Q');
+  comm.serialReceiveLegacy();
+
+  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals("123456789012345678901234567890123456789012345678901234567890123"));
+  TEST_ASSERT_EQUAL(63, mockStream.getTxBuffer().length());
+}
+
 void setup() {
 
   UNITY_BEGIN();
@@ -91,6 +102,7 @@ void setup() {
   RUN_TEST(test_serialReceiveLegacy_no_data);
   RUN_TEST(test_set_code_version);
   RUN_TEST(test_codeVersion_escaping);
+  RUN_TEST(test_codeVersion_limit);
 
   UNITY_END();
 }
