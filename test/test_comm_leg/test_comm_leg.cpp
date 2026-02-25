@@ -15,11 +15,11 @@ void setUp(void) {
 void tearDown(void) {}
 
 
-void check_codeVersion(String code_version) {
+void check_codeVersion(char* code_version) {
   mockStream.pushByte('Q');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(code_version));
+  TEST_ASSERT_EQUAL_STRING(code_version, mockStream.getTxBuffer().c_str());
 }
 
 void test_code_version_command(void) {
@@ -30,14 +30,14 @@ void test_code_version2_command(void) {
   mockStream.pushByte('S');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_CODE_VERSION));
+  TEST_ASSERT_EQUAL_STRING(DEFAULT_CODE_VERSION, mockStream.getTxBuffer().c_str());
 }
 
 void test_protocol_version_command(void) {
   mockStream.pushByte('F');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(DEFAULT_PROTOCOL_VERSION));
+  TEST_ASSERT_EQUAL_STRING(DEFAULT_PROTOCOL_VERSION, mockStream.getTxBuffer().c_str());
 }
 
 void test_two_param_constructor(void) {
@@ -71,15 +71,20 @@ void test_codeVersion_escaping(void) {
   comm.setCodeVersion(new_code_version);
 
   new_code_version[4] = 'f';
-  check_codeVersion("HIIII pippo");
+  check_codeVersion((char*)"HIIII pippo");
 }
 
 void test_codeVersion_limit(void) {
   char long_code_version[] = "1234567890123456789012345678901234567890123456789012345678901234";
   comm.setCodeVersion(long_code_version);
 
-  check_codeVersion("123456789012345678901234567890123456789012345678901234567890123");
+  check_codeVersion((char*)"123456789012345678901234567890123456789012345678901234567890123");
   TEST_ASSERT_EQUAL(63, mockStream.getTxBuffer().length());
+}
+
+void test_set_code_version_nullptr(void) {
+  comm.setCodeVersion(nullptr);
+  check_codeVersion((char*)"");
 }
 
 void setup() {
@@ -95,6 +100,7 @@ void setup() {
   RUN_TEST(test_set_code_version);
   RUN_TEST(test_codeVersion_escaping);
   RUN_TEST(test_codeVersion_limit);
+  RUN_TEST(test_set_code_version_nullptr);
 
   UNITY_END();
 }
