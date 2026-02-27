@@ -8,9 +8,10 @@ struct Rt_values rt_values = {&rd, sizeof(rd)};
 Rt_data rt_data(&rt_values);
 
 void setUp(void) {
- rd.x1 = 0;
- rd.x2 = 0;
- rd.x3 = 0;
+  rt_data = Rt_data(&rt_values);
+  rd.x1 = 0;
+  rd.x2 = 0;
+  rd.x3 = 0;
 }
 
 void tearDown(void) {}
@@ -56,6 +57,19 @@ void test_null_constructor(void) {
   TEST_ASSERT_EQUAL(0, len);
 }
 
+void test_null_set_rt_values(void) {
+  rt_data.setRtValues(nullptr);
+
+  struct realtime_data* data = (struct realtime_data*)rt_data.getRtData();
+  size_t len = rt_data.getRtDataLen();
+
+  TEST_ASSERT_NOT_NULL(rt_data.getRtValues());
+  TEST_ASSERT_EQUAL(sizeof(rd), len);
+  TEST_ASSERT_EQUAL(0, data->x1);
+  TEST_ASSERT_EQUAL(0, data->x2);
+  TEST_ASSERT_EQUAL(0, data->x3);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -65,6 +79,7 @@ void setup() {
   RUN_TEST(test_get_rt_values);
   RUN_TEST(test_set_rt_values);
   RUN_TEST(test_null_constructor);
+  RUN_TEST(test_null_set_rt_values);
 
   UNITY_END();
 }
