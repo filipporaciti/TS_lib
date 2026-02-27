@@ -156,6 +156,14 @@ void test_get_page(void) {
   TEST_ASSERT_EQUAL(sizeof(p2), page2->len);
 }
 
+void test_get_page_out_of_range(void) {
+  Page* page = myPages.getPage(2);
+  TEST_ASSERT_NULL(page);
+
+  page = myPages.getPage(-1);
+  TEST_ASSERT_NULL(page);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -178,6 +186,7 @@ void setup() {
 
   RUN_TEST(test_get_pages);
   RUN_TEST(test_get_page);
+  RUN_TEST(test_get_page_out_of_range);
 
   UNITY_END();
 }
