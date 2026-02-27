@@ -14,8 +14,11 @@ uint8_t* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
 	return ((uint8_t*)_pages[pageNum].pointer + offset);
 }
 
-uint32_t Pages::getPageCRC(void *page, size_t pageLen){
+uint32_t Pages::getPageCRC(uint16_t pageNum){
 	if (_pages == nullptr) return 0;
+
+	void* page = getPageValue(pageNum, 0);
+	size_t pageLen = getPageLen(pageNum);
 
 	uint32_t crc;
  	CRC32 crcCalc;

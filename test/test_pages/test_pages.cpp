@@ -11,7 +11,12 @@ struct Page page_2 = {&p2, sizeof(p2)};
 Page pages[] = {page_1, page_2};
 Pages myPages(pages, 2);
 
-void setUp(void) {}
+void setUp(void) {
+  p1.x1 = 0;
+  p1.x2 = 0;
+  p2.x3 = 0;
+  p2.x4 = 0;
+}
 
 void tearDown(void) {}
 
@@ -50,6 +55,24 @@ void test_get_page_value_offset_out_of_range(void) {
   TEST_ASSERT_NULL(value);
 }
 
+void test_get_page_crc(void) {
+  uint32_t crc1 = myPages.getPageCRC(0);
+  uint32_t crc2 = myPages.getPageCRC(1);
+
+  TEST_ASSERT_EQUAL(1104745215, crc1);
+  TEST_ASSERT_EQUAL(4282505490, crc2);
+
+  p1.x1 = 1;
+  p1.x2 = 2;
+  p2.x3 = 1;
+  p2.x4 = 2;
+  crc1 = myPages.getPageCRC(0);
+  crc2 = myPages.getPageCRC(1);
+
+  TEST_ASSERT_EQUAL(3066839698, crc1);
+  TEST_ASSERT_EQUAL(3434467751, crc2);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -58,6 +81,8 @@ void setup() {
   RUN_TEST(test_get_page_value);
   RUN_TEST(test_get_page_value_out_of_range);
   RUN_TEST(test_get_page_value_offset_out_of_range);
+
+  RUN_TEST(test_get_page_crc);
 
   UNITY_END();
 }
