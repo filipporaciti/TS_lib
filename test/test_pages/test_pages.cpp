@@ -37,12 +37,21 @@ void test_get_page_value(void) {
   TEST_ASSERT_EQUAL(40, *x4);
 }
 
+void test_get_page_value_out_of_range(void) {
+  uint8_t* value = myPages.getPageValue(2, 0);
+  TEST_ASSERT_NULL(value);
+
+  value = myPages.getPageValue(-1, 0);
+  TEST_ASSERT_NULL(value);
+}
+
 
 void setup() {
   UNITY_BEGIN();
   
   RUN_TEST(test_pages_num);
   RUN_TEST(test_get_page_value);
+  RUN_TEST(test_get_page_value_out_of_range);
 
   UNITY_END();
 }
