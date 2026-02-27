@@ -70,6 +70,13 @@ void test_null_set_rt_values(void) {
   TEST_ASSERT_EQUAL(0, data->x3);
 }
 
+void test_wanted_reference_escape(void) {
+  struct realtime_data* data = (struct realtime_data*)rt_data.getRtData();
+  TEST_ASSERT_EQUAL(0, data->x1);
+  rd.x1 = 42;
+  TEST_ASSERT_EQUAL(42, data->x1);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -80,6 +87,8 @@ void setup() {
   RUN_TEST(test_set_rt_values);
   RUN_TEST(test_null_constructor);
   RUN_TEST(test_null_set_rt_values);
+
+  RUN_TEST(test_wanted_reference_escape);
 
   UNITY_END();
 }
