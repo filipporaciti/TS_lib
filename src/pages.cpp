@@ -8,7 +8,7 @@ Pages::Pages(Page* pages, uint16_t num_pages) {
 }
 
 uint8_t* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
-	if (isIndexOutOfRange(pageNum)) {
+	if (isIndexOutOfRange(pageNum) || offset >= _pages[pageNum].len) {
 		return nullptr;
 	}
 	return ((uint8_t*)_pages[pageNum].pointer + offset);

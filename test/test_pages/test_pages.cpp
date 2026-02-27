@@ -45,6 +45,11 @@ void test_get_page_value_out_of_range(void) {
   TEST_ASSERT_NULL(value);
 }
 
+void test_get_page_value_offset_out_of_range(void) {
+  uint8_t* value = myPages.getPageValue(0, sizeof(p1));
+  TEST_ASSERT_NULL(value);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -52,6 +57,7 @@ void setup() {
   RUN_TEST(test_pages_num);
   RUN_TEST(test_get_page_value);
   RUN_TEST(test_get_page_value_out_of_range);
+  RUN_TEST(test_get_page_value_offset_out_of_range);
 
   UNITY_END();
 }
