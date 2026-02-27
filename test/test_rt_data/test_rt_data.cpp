@@ -45,6 +45,17 @@ void test_set_rt_values(void) {
   TEST_ASSERT_EQUAL(data, &new_rd);
 }
 
+void test_null_constructor(void) {
+  rt_data = Rt_data(nullptr);
+
+  void* data = rt_data.getRtData();
+  size_t len = rt_data.getRtDataLen();
+
+  TEST_ASSERT_NULL(rt_data.getRtValues());
+  TEST_ASSERT_NULL(data);
+  TEST_ASSERT_EQUAL(0, len);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -53,6 +64,7 @@ void setup() {
   RUN_TEST(test_get_rt_data_len);
   RUN_TEST(test_get_rt_values);
   RUN_TEST(test_set_rt_values);
+  RUN_TEST(test_null_constructor);
 
   UNITY_END();
 }
