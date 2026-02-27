@@ -12,6 +12,7 @@ Page pages[] = {page_1, page_2};
 Pages myPages(pages, 2);
 
 void setUp(void) {
+  myPages = Pages(pages, 2);
   p1.x1 = 0;
   p1.x2 = 0;
   p2.x3 = 0;
@@ -180,6 +181,13 @@ void test_set_pages(void) {
   TEST_ASSERT_NOT_EQUAL(&p2, myPages.getPage(1)->pointer);
 }
 
+void test_wanted_reference_escape(void) {
+  uint8_t* x1 = myPages.getPageValue(0, 0);
+  TEST_ASSERT_EQUAL(0, *x1);
+  p1.x1 = 42;
+  TEST_ASSERT_EQUAL(42, *x1);
+}
+
 void setup() {
   UNITY_BEGIN();
   
@@ -204,6 +212,8 @@ void setup() {
   RUN_TEST(test_get_page_out_of_range);
 
   RUN_TEST(test_set_pages);
+
+  RUN_TEST(test_wanted_reference_escape);
 
   UNITY_END();
 }
