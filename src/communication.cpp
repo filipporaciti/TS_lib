@@ -184,14 +184,12 @@ void Communication::sendPageValue() {
 void Communication::sendCRCPage() {
 	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
 
-	void* first_byte = _pages->getPageValue(pageNum, 0); // check pageNum
-	if (first_byte == nullptr) {
+	if (_pages->isIndexOutOfRange(pageNum)) {
 		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 		return;
 	}
 
-	size_t pageLen = _pages->getPageLen(pageNum);
-	uint32_t crc = _pages->getPageCRC(first_byte, pageLen);
+	uint32_t crc = _pages->getPageCRC(pageNum);
 
 	if (crc == 0) {
 		sendCodeMessage(_serial, SERIAL_MSG_WRONG_CRC);

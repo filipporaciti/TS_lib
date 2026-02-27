@@ -7,15 +7,18 @@ Pages::Pages(Page* pages, uint16_t num_pages) {
 	_num_pages = num_pages;
 }
 
-void* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
-	if (isIndexOutOfRange(pageNum)) {
+uint8_t* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
+	if (isIndexOutOfRange(pageNum) || offset >= _pages[pageNum].len) {
 		return nullptr;
 	}
 	return ((uint8_t*)_pages[pageNum].pointer + offset);
 }
 
-uint32_t Pages::getPageCRC(void *page, size_t pageLen){
+uint32_t Pages::getPageCRC(uint16_t pageNum){
 	if (_pages == nullptr) return 0;
+
+	void* page = getPageValue(pageNum, 0);
+	size_t pageLen = getPageLen(pageNum);
 
 	uint32_t crc;
  	CRC32 crcCalc;
