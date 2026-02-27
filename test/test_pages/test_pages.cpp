@@ -89,6 +89,14 @@ void test_get_page_len(void) {
   TEST_ASSERT_EQUAL(sizeof(p2), len2);
 }
 
+void test_get_page_len_out_of_range(void) {
+  size_t len = myPages.getPageLen(2);
+  TEST_ASSERT_EQUAL(0, len);
+
+  len = myPages.getPageLen(-1);
+  TEST_ASSERT_EQUAL(0, len);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -102,6 +110,7 @@ void setup() {
   RUN_TEST(test_get_page_crc_out_of_range);
 
   RUN_TEST(test_get_page_len);
+  RUN_TEST(test_get_page_len_out_of_range);
 
   UNITY_END();
 }
