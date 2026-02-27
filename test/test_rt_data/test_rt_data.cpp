@@ -28,12 +28,20 @@ void test_get_rt_data_len(void) {
   TEST_ASSERT_EQUAL(sizeof(rd), len);
 }
 
+void test_get_rt_values(void) {
+  Rt_values* values = rt_data.getRtValues();
+  TEST_ASSERT_NOT_NULL(values);
+  TEST_ASSERT_EQUAL(&rd, values->pointer);
+  TEST_ASSERT_EQUAL(sizeof(rd), values->len);
+}
+
 
 void setup() {
   UNITY_BEGIN();
 
   RUN_TEST(test_get_rt_data);
   RUN_TEST(test_get_rt_data_len);
+  RUN_TEST(test_get_rt_values);
 
   UNITY_END();
 }
