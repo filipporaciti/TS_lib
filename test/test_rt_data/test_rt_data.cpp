@@ -23,11 +23,17 @@ void test_get_rt_data(void) {
   TEST_ASSERT_EQUAL(0, data->x3);
 }
 
+void test_get_rt_data_len(void) {
+  size_t len = rt_data.getRtDataLen();
+  TEST_ASSERT_EQUAL(sizeof(rd), len);
+}
+
 
 void setup() {
   UNITY_BEGIN();
 
   RUN_TEST(test_get_rt_data);
+  RUN_TEST(test_get_rt_data_len);
 
   UNITY_END();
 }
