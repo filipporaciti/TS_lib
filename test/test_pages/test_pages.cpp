@@ -146,6 +146,16 @@ void test_get_pages(void) {
   TEST_ASSERT_EQUAL(sizeof(p2), pages[1].len);
 }
 
+void test_get_page(void) {
+  Page* page1 = myPages.getPage(0);
+  Page* page2 = myPages.getPage(1);
+
+  TEST_ASSERT_EQUAL(&p1, page1->pointer);
+  TEST_ASSERT_EQUAL(sizeof(p1), page1->len);
+  TEST_ASSERT_EQUAL(&p2, page2->pointer);
+  TEST_ASSERT_EQUAL(sizeof(p2), page2->len);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -167,6 +177,7 @@ void setup() {
   RUN_TEST(test_store_page_out_of_range);
 
   RUN_TEST(test_get_pages);
+  RUN_TEST(test_get_page);
 
   UNITY_END();
 }
