@@ -130,6 +130,14 @@ void test_store_page(void) {
   TEST_ASSERT_EQUAL(0, p2.x4);
 }
 
+void test_store_page_out_of_range(void) {
+  bool result = myPages.storePage(2);
+  TEST_ASSERT_FALSE(result);
+
+  result = myPages.storePage(-1);
+  TEST_ASSERT_FALSE(result);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -148,6 +156,7 @@ void setup() {
   RUN_TEST(test_index_out_of_range);
 
   RUN_TEST(test_store_page);
+  RUN_TEST(test_store_page_out_of_range);
 
   UNITY_END();
 }
