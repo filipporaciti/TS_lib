@@ -97,6 +97,13 @@ void test_get_page_len_out_of_range(void) {
   TEST_ASSERT_EQUAL(0, len);
 }
 
+void test_index_out_of_range(void) {
+  TEST_ASSERT_TRUE(myPages.isIndexOutOfRange(2));
+  TEST_ASSERT_TRUE(myPages.isIndexOutOfRange(-1));
+  TEST_ASSERT_FALSE(myPages.isIndexOutOfRange(0));
+  TEST_ASSERT_FALSE(myPages.isIndexOutOfRange(1));
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -111,6 +118,8 @@ void setup() {
 
   RUN_TEST(test_get_page_len);
   RUN_TEST(test_get_page_len_out_of_range);
+
+  RUN_TEST(test_index_out_of_range);
 
   UNITY_END();
 }
