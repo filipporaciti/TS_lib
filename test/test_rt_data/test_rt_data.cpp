@@ -35,6 +35,16 @@ void test_get_rt_values(void) {
   TEST_ASSERT_EQUAL(sizeof(rd), values->len);
 }
 
+void test_set_rt_values(void) {
+  struct realtime_data new_rd = {1, 2, 3};
+  Rt_values new_rt_values = {&new_rd, sizeof(new_rd)};
+  rt_data.setRtValues(&new_rt_values);
+
+  struct realtime_data* data = (struct realtime_data*)rt_data.getRtData();
+  TEST_ASSERT_NOT_NULL(data);
+  TEST_ASSERT_EQUAL(data, &new_rd);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -42,6 +52,7 @@ void setup() {
   RUN_TEST(test_get_rt_data);
   RUN_TEST(test_get_rt_data_len);
   RUN_TEST(test_get_rt_values);
+  RUN_TEST(test_set_rt_values);
 
   UNITY_END();
 }
