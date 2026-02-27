@@ -164,6 +164,21 @@ void test_get_page_out_of_range(void) {
   TEST_ASSERT_NULL(page);
 }
 
+void test_set_pages(void) {
+  struct page1 p3;
+  struct page2 p4;
+  Page page_3 = {&p3, sizeof(p3)};
+  Page page_4 = {&p4, sizeof(p4)};
+  Page newPages[] = {page_3, page_4};
+  myPages.setPages(newPages, 2);
+
+  TEST_ASSERT_EQUAL(&p3, myPages.getPage(0)->pointer);
+  TEST_ASSERT_EQUAL(sizeof(p3), myPages.getPage(0)->len);
+  TEST_ASSERT_EQUAL(&p4, myPages.getPage(1)->pointer);
+  TEST_ASSERT_EQUAL(sizeof(p4), myPages.getPage(1)->len);
+  TEST_ASSERT_NOT_EQUAL(&p1, myPages.getPage(0)->pointer);
+  TEST_ASSERT_NOT_EQUAL(&p2, myPages.getPage(1)->pointer);
+}
 
 void setup() {
   UNITY_BEGIN();
@@ -187,6 +202,8 @@ void setup() {
   RUN_TEST(test_get_pages);
   RUN_TEST(test_get_page);
   RUN_TEST(test_get_page_out_of_range);
+
+  RUN_TEST(test_set_pages);
 
   UNITY_END();
 }
