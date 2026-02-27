@@ -20,5 +20,6 @@ Rt_values* Rt_data::getRtValues(void) {
 }
 
 void Rt_data::setRtValues(Rt_values* rt_values) {
+	if (rt_values == nullptr) return;
 	_rt_values = rt_values;
 }
