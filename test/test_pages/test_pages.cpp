@@ -73,6 +73,14 @@ void test_get_page_crc(void) {
   TEST_ASSERT_EQUAL(3434467751, crc2);
 }
 
+void test_get_page_crc_out_of_range(void) {
+  uint32_t crc = myPages.getPageCRC(2);
+  TEST_ASSERT_EQUAL(0, crc);
+
+  crc = myPages.getPageCRC(-1);
+  TEST_ASSERT_EQUAL(0, crc);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -83,6 +91,7 @@ void setup() {
   RUN_TEST(test_get_page_value_offset_out_of_range);
 
   RUN_TEST(test_get_page_crc);
+  RUN_TEST(test_get_page_crc_out_of_range);
 
   UNITY_END();
 }
