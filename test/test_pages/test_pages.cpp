@@ -104,6 +104,32 @@ void test_index_out_of_range(void) {
   TEST_ASSERT_FALSE(myPages.isIndexOutOfRange(1));
 }
 
+void test_store_page(void) {
+  myPages.storePage(0);
+  myPages.storePage(1);
+
+  p1.x1 = 1;
+  p1.x2 = 2;
+  p2.x3 = 3;
+  p2.x4 = 4;
+
+  bool result1 = myPages.storePage(0);
+
+  TEST_ASSERT_TRUE(result1);
+
+  p1.x1 = 5;
+  p1.x2 = 6;
+  p2.x3 = 7;
+  p2.x4 = 8;
+
+  myPages.loadStoredPages();
+
+  TEST_ASSERT_EQUAL(1, p1.x1);
+  TEST_ASSERT_EQUAL(2, p1.x2);
+  TEST_ASSERT_EQUAL(0, p2.x3);
+  TEST_ASSERT_EQUAL(0, p2.x4);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -120,6 +146,8 @@ void setup() {
   RUN_TEST(test_get_page_len_out_of_range);
 
   RUN_TEST(test_index_out_of_range);
+
+  RUN_TEST(test_store_page);
 
   UNITY_END();
 }
