@@ -31,7 +31,7 @@ void Communication::serialReceive() {
 		serialBufferIndex = 0;
 		serialStatusFlag = SERIAL_RECEIVE_PAYLOAD_INPROGRESS;
 		
-		if (serialPayloadLen > SERIAL_BUFFER_SIZE) { // se la lunghezza supero quella del buffer errore
+		if (serialPayloadLen > SERIAL_BUFFER_SIZE) {
 			sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 			while (_serial->available() > 0) {
 				_serial->read();

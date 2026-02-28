@@ -28,7 +28,6 @@
 class Communication {
   public:
     Communication() = default;
-    Communication(Stream* serial, Rt_data* rt_data, Pages* pages);
     Communication(Stream* serial, char* code_version, Rt_data* rt_data, Pages* pages);
     void serialReceive(void);
     void setCodeVersion(char* code_version);
