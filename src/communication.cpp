@@ -110,10 +110,9 @@ void Communication::processSerialPayload() {
 
 void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsigned long payloadLen) {
 	uint8_t header[2];
-	header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
+	header[0] = (payloadLen + 1) >> 8;
 	header[1] = (payloadLen + 1) & 0xFF;
 
-	// Calcola CRC anche includendo il flag
 	uint32_t crc;
 
 	CRC32 crcCalc;
@@ -121,10 +120,10 @@ void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsig
 	crcCalc.update(payload, payloadLen);
 	crc = crcCalc.finalize();
 
-	// --- Invio ---
-	s->write(header, 2);        // dimensione totale (2 byte)
+	// --- Send ---
+	s->write(header, 2);
 	s->write(&flag, 1);
-	s->write(payload, payloadLen); // dati veri e propri
+	s->write(payload, payloadLen);
 	s->write((crc >> 24) & 0xFF);
 	s->write((crc >> 16) & 0xFF);
 	s->write((crc >> 8) & 0xFF);
