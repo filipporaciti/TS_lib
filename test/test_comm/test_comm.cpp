@@ -35,12 +35,24 @@ void test_rx_buffer_overflow(void) {
   TEST_ASSERT_EQUAL(0, mockStream.available());
 }
 
+void test_wrong_crc(void) {
+  uint8_t data[7] = {0x00, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  mockStream.pushBytes(data, sizeof(data));
+  comm.serialReceive();
+
+  // 0x82 = SERIAL_MSG_WRONG_CRC
+  // 2 bytes for payload length, 1 byte for flag, 4 bytes for CRC
+  TEST_ASSERT_EQUAL_MEMORY("\x00\x01\x82\xD1\xB4\x0D\x81", mockStream.getTxBuffer(), 7);
+  TEST_ASSERT_TRUE(comm.isReady());
+}
+
 
 void setup() {
   UNITY_BEGIN();
 
   RUN_TEST(test_status_ready);
   RUN_TEST(test_rx_buffer_overflow);
+  RUN_TEST(test_wrong_crc);
 
   UNITY_END();
 }
