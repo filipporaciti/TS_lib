@@ -113,6 +113,14 @@ void test_p_more_data(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_d(void) {
+  // 1 byte for page num
+  uint8_t data[] = {0x00, 0x02, 0x64, 0x00, 0X40, 0X48, 0XBC, 0X5C};
+  uint8_t response[] = {0x00, 0x05, 0x00, 0XFF, 0XFF, 0XFF, 0XFF, 0X18, 0X99, 0XD7, 0XFE};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -129,6 +137,7 @@ void setup() {
   RUN_TEST(test_p_offset_out_of_range);
   RUN_TEST(test_p_len_out_of_range);
   RUN_TEST(test_p_more_data);
+  RUN_TEST(test_d);
 
   UNITY_END();
 }
