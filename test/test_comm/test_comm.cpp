@@ -106,6 +106,13 @@ void test_p_len_out_of_range(void) {
   TEST_CMD(data, sizeof(data), range_err_resp);
 }
 
+void test_p_more_data(void) {
+  uint8_t data[] = {0x00, 0x06, 0x70, 0x00, 0x02, 0x00, 0x03, 0x00, 0X3B, 0XC4, 0X37, 0X2A};
+  uint8_t response[] = {0x00, 0x04, 0x00, 0x02, 0x03, 0x04, 0X0E, 0X80, 0X9C, 0XA8};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -121,6 +128,7 @@ void setup() {
   RUN_TEST(test_p_page_out_of_range);
   RUN_TEST(test_p_offset_out_of_range);
   RUN_TEST(test_p_len_out_of_range);
+  RUN_TEST(test_p_more_data);
 
   UNITY_END();
 }
