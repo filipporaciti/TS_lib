@@ -70,6 +70,13 @@ void test_F(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_C(void) {
+  uint8_t data[7] = {0x00, 0x01, 0x43, 0X3D, 0XD7, 0XFF, 0XA7};
+  uint8_t response[] = {0x00, 0x02, 0x00, 0xFF, 0X6C, 0XDB, 0XFD, 0X72};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -80,6 +87,7 @@ void setup() {
   RUN_TEST(test_Q);
   RUN_TEST(test_S);
   RUN_TEST(test_F);
+  RUN_TEST(test_C);
 
   UNITY_END();
 }
