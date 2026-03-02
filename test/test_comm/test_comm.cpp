@@ -14,6 +14,14 @@ void setUp(void) {
 
 void tearDown(void) {}
 
+void TEST_CMD(uint8_t* data, size_t dataSize, uint8_t* response) {
+  mockStream.pushBytes(data, dataSize);
+  comm.serialReceive();
+
+  TEST_ASSERT_EQUAL_MEMORY(response, mockStream.getTxBuffer(), mockStream.getTxBufferLen());
+  TEST_ASSERT_TRUE(comm.isReady());
+}
+
 void test_status_ready(void) {
   TEST_ASSERT_TRUE(comm.isReady());
   mockStream.pushByte(0x00);
@@ -37,23 +45,18 @@ void test_rx_buffer_overflow(void) {
 
 void test_wrong_crc(void) {
   uint8_t data[7] = {0x00, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-  mockStream.pushBytes(data, sizeof(data));
-  comm.serialReceive();
-
   // 0x82 = SERIAL_MSG_WRONG_CRC
-  TEST_ASSERT_EQUAL_MEMORY("\x00\x01\x82\xD1\xB4\x0D\x81", mockStream.getTxBuffer(), 7);
-  TEST_ASSERT_TRUE(comm.isReady());
+  uint8_t response[] = {0x00, 0x01, 0x82, 0xD1, 0xB4, 0x0D, 0x81}; 
+
+  TEST_CMD(data, sizeof(data), response);
 }
 
 void test_Q(void) {
   uint8_t data[7] = {0x00, 0x01, 0x51, 0xCE, 0x6E, 0x8E, 0xEF};
-  mockStream.pushBytes(data, sizeof(data));
-  comm.serialReceive();
-
   // 2 bytes for payload length, 1 byte for flag, 5 bytes for payload, 4 bytes for CRC
   uint8_t response[] = {0x00, 0x06, 0x00, 0x31, 0x32, 0x33, 0x34, 0x35, 0xBC, 0x15, 0x6C, 0xA2};
-  TEST_ASSERT_EQUAL_MEMORY(response, mockStream.getTxBuffer(), mockStream.getTxBufferLen());
-  TEST_ASSERT_TRUE(comm.isReady());
+
+  TEST_CMD(data, sizeof(data), response);
 }
 
 void test_S(void) {
@@ -62,12 +65,9 @@ void test_S(void) {
 
 void test_F(void) {
   uint8_t data[7] = {0x00, 0x01, 0x46, 0x4D, 0xBD, 0x0B, 0x28};
-  mockStream.pushBytes(data, sizeof(data));
-  comm.serialReceive();
-
   uint8_t response[] = {0x00, 0x04, 0x00, 0x30, 0x30, 0x32, 0x12, 0xBE, 0x5D, 0xFF};
-  TEST_ASSERT_EQUAL_MEMORY(response, mockStream.getTxBuffer(), mockStream.getTxBufferLen());
-  TEST_ASSERT_TRUE(comm.isReady());
+
+  TEST_CMD(data, sizeof(data), response);
 }
 
 
