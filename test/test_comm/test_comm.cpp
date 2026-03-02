@@ -2,14 +2,15 @@
 #include <unity.h>
 #include <mock_stream.cpp>
 #include "communication.h"
-#include "TS_lib.h"
+#include "../mock/pages_mock.cpp"
 
 MockStream mockStream;
+PagesMock pagesMock;
 Communication comm;
 
 void setUp(void) {
   mockStream.clear();
-  comm = Communication(&mockStream, (char*)"12345", nullptr, nullptr);
+  comm = Communication(&mockStream, (char*)"12345", nullptr, &pagesMock);
 }
 
 void tearDown(void) {}
@@ -44,7 +45,7 @@ void test_rx_buffer_overflow(void) {
 }
 
 void test_wrong_crc(void) {
-  uint8_t data[7] = {0x00, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  uint8_t data[] = {0x00, 0x01, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
   // 0x82 = SERIAL_MSG_WRONG_CRC
   uint8_t response[] = {0x00, 0x01, 0x82, 0xD1, 0xB4, 0x0D, 0x81}; 
 
@@ -52,7 +53,7 @@ void test_wrong_crc(void) {
 }
 
 void test_Q(void) {
-  uint8_t data[7] = {0x00, 0x01, 0x51, 0xCE, 0x6E, 0x8E, 0xEF};
+  uint8_t data[] = {0x00, 0x01, 0x51, 0xCE, 0x6E, 0x8E, 0xEF};
   // 2 bytes for payload length, 1 byte for flag, 5 bytes for payload, 4 bytes for CRC
   uint8_t response[] = {0x00, 0x06, 0x00, 0x31, 0x32, 0x33, 0x34, 0x35, 0xBC, 0x15, 0x6C, 0xA2};
 
@@ -64,15 +65,23 @@ void test_S(void) {
 }
 
 void test_F(void) {
-  uint8_t data[7] = {0x00, 0x01, 0x46, 0x4D, 0xBD, 0x0B, 0x28};
+  uint8_t data[] = {0x00, 0x01, 0x46, 0x4D, 0xBD, 0x0B, 0x28};
   uint8_t response[] = {0x00, 0x04, 0x00, 0x30, 0x30, 0x32, 0x12, 0xBE, 0x5D, 0xFF};
 
   TEST_CMD(data, sizeof(data), response);
 }
 
 void test_C(void) {
-  uint8_t data[7] = {0x00, 0x01, 0x43, 0X3D, 0XD7, 0XFF, 0XA7};
+  uint8_t data[] = {0x00, 0x01, 0x43, 0X3D, 0XD7, 0XFF, 0XA7};
   uint8_t response[] = {0x00, 0x02, 0x00, 0xFF, 0X6C, 0XDB, 0XFD, 0X72};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
+void test_p(void) {
+  // 1 byte for page num, 2 bytes for offset, 2 bytes for len
+  uint8_t data[] = {0x00, 0x06, 0x70, 0x00, 0x00, 0x00, 0x01, 0x00, 0XA3, 0XFB, 0X9D, 0X23};
+  uint8_t response[] = {0x00, 0x02, 0x00, 0x00, 0X41, 0XD9, 0X12, 0XFF};
 
   TEST_CMD(data, sizeof(data), response);
 }
@@ -88,6 +97,7 @@ void setup() {
   RUN_TEST(test_S);
   RUN_TEST(test_F);
   RUN_TEST(test_C);
+  RUN_TEST(test_p);
 
   UNITY_END();
 }

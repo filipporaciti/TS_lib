@@ -165,8 +165,8 @@ void Communication::sendCanInfo() {
 
 void Communication::sendPageValue() {
 	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
-	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
-	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]);
+	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);
 
 	void* first_byte = _pages->getPageValue(pageNum, offset);
 	if (first_byte == nullptr) {
@@ -227,8 +227,8 @@ void Communication::sendSavePage() {
 
 void Communication::sendChangePageValue() {
 	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
-	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
-	size_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]);
+	size_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);
 
 	void* first_byte = _pages->getPageValue(pageNum, offset);
 	size_t pageLen = _pages->getPageLen(pageNum);
