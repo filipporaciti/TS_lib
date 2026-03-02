@@ -174,10 +174,7 @@ void Communication::sendPageValue() {
 		return;
 	}
 
-	uint8_t data[len] = {};
-
-	memcpy(data, first_byte, len);
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, first_byte, len);
 }
 
 void Communication::sendCRCPage() {
