@@ -9,7 +9,7 @@ Communication comm;
 
 void setUp(void) {
   mockStream.clear();
-  comm = Communication(&mockStream, nullptr, nullptr, nullptr);
+  comm = Communication(&mockStream, (char*)"12345", nullptr, nullptr);
 }
 
 void tearDown(void) {}
@@ -41,8 +41,18 @@ void test_wrong_crc(void) {
   comm.serialReceive();
 
   // 0x82 = SERIAL_MSG_WRONG_CRC
-  // 2 bytes for payload length, 1 byte for flag, 4 bytes for CRC
   TEST_ASSERT_EQUAL_MEMORY("\x00\x01\x82\xD1\xB4\x0D\x81", mockStream.getTxBuffer(), 7);
+  TEST_ASSERT_TRUE(comm.isReady());
+}
+
+void test_Q(void) {
+  uint8_t data[7] = {0x00, 0x01, 0x51, 0xCE, 0x6E, 0x8E, 0xEF};
+  mockStream.pushBytes(data, sizeof(data));
+  comm.serialReceive();
+
+  // 2 bytes for payload length, 1 byte for flag, 5 bytes for payload, 4 bytes for CRC
+  uint8_t response[] = {0x00, 0x06, 0x00, 0x31, 0x32, 0x33, 0x34, 0x35, 0xBC, 0x15, 0x6C, 0xA2};
+  TEST_ASSERT_EQUAL_MEMORY(response, mockStream.getTxBuffer(), mockStream.getTxBufferLen());
   TEST_ASSERT_TRUE(comm.isReady());
 }
 
@@ -53,6 +63,7 @@ void setup() {
   RUN_TEST(test_status_ready);
   RUN_TEST(test_rx_buffer_overflow);
   RUN_TEST(test_wrong_crc);
+  RUN_TEST(test_Q);
 
   UNITY_END();
 }

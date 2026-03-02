@@ -122,7 +122,7 @@ void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsig
 
 	// --- Send ---
 	s->write(header, 2);
-	s->write(&flag, 1);
+	s->write(flag);
 	s->write(payload, payloadLen);
 	s->write((crc >> 24) & 0xFF);
 	s->write((crc >> 16) & 0xFF);
