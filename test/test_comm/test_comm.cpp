@@ -56,6 +56,10 @@ void test_Q(void) {
   TEST_ASSERT_TRUE(comm.isReady());
 }
 
+void test_S(void) {
+  test_Q();
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -64,6 +68,7 @@ void setup() {
   RUN_TEST(test_rx_buffer_overflow);
   RUN_TEST(test_wrong_crc);
   RUN_TEST(test_Q);
+  RUN_TEST(test_S);
 
   UNITY_END();
 }
