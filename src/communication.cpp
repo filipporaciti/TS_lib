@@ -169,7 +169,7 @@ void Communication::sendPageValue() {
 	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);
 
 	void* first_byte = _pages->getPageValue(pageNum, offset);
-	if (first_byte == nullptr) {
+	if (first_byte == nullptr || (len + offset) > _pages->getPageLen(pageNum)) {
 		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 		return;
 	}

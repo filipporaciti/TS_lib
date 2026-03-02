@@ -8,6 +8,8 @@ MockStream mockStream;
 PagesMock pagesMock;
 Communication comm;
 
+uint8_t range_err_resp[] = {0x00, 0x01, 0x84, 0x38, 0xD7, 0xA8, 0xB4}; // 0x84 = SERIAL_MSG_RANGE_ERR
+
 void setUp(void) {
   mockStream.clear();
   comm = Communication(&mockStream, (char*)"12345", nullptr, &pagesMock);
@@ -39,7 +41,7 @@ void test_rx_buffer_overflow(void) {
 
   // 0x84 = SERIAL_MSG_RANGE_ERR
   // 2 bytes for payload length, 1 byte for flag, 4 bytes for CRC
-  TEST_ASSERT_EQUAL_MEMORY("\x00\x01\x84\x38\xD7\xA8\xB4", mockStream.getTxBuffer(), 7);
+  TEST_ASSERT_EQUAL_MEMORY(range_err_resp, mockStream.getTxBuffer(), 7);
   TEST_ASSERT_TRUE(comm.isReady());
   TEST_ASSERT_EQUAL(0, mockStream.available());
 }
@@ -88,16 +90,20 @@ void test_p(void) {
 
 void test_p_page_out_of_range(void) {
   uint8_t data[] = {0x00, 0x06, 0x70, 0xFF, 0x00, 0x00, 0x01, 0x00, 0X69, 0X9F, 0X5A, 0XAF};
-  uint8_t response[] = {0x00, 0x01, 0x84, 0x38, 0xD7, 0xA8, 0xB4}; // 0x84 = SERIAL_MSG_RANGE_ERR
 
-  TEST_CMD(data, sizeof(data), response);
+  TEST_CMD(data, sizeof(data), range_err_resp);
 }
 
 void test_p_offset_out_of_range(void) {
   uint8_t data[] = {0x00, 0x06, 0x70, 0x00, 0xFF, 0xFF, 0x01, 0x00, 0XC3, 0X66, 0XAF, 0X3F};
-  uint8_t response[] = {0x00, 0x01, 0x84, 0x38, 0xD7, 0xA8, 0xB4}; // 0x84 = SERIAL_MSG_RANGE_ERR
 
-  TEST_CMD(data, sizeof(data), response);
+  TEST_CMD(data, sizeof(data), range_err_resp);
+}
+
+void test_p_len_out_of_range(void) {
+  uint8_t data[] = {0x00, 0x06, 0x70, 0x00, 0x00, 0x00, 0xFF, 0xFF, 0X04, 0XC6, 0XBE, 0X9D};
+
+  TEST_CMD(data, sizeof(data), range_err_resp);
 }
 
 
@@ -114,6 +120,7 @@ void setup() {
   RUN_TEST(test_p);
   RUN_TEST(test_p_page_out_of_range);
   RUN_TEST(test_p_offset_out_of_range);
+  RUN_TEST(test_p_len_out_of_range);
 
   UNITY_END();
 }
