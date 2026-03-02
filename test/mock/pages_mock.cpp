@@ -10,6 +10,9 @@ class PagesMock: public Pages {
     PagesMock() = default;
     
     uint8_t* getPageValue(uint16_t pageNum, uint16_t offset) override {
+      if (isIndexOutOfRange(pageNum) || offset >= getPageLen(pageNum)) {
+        return nullptr;
+      }
       return (uint8_t*)"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09";
     }
 
@@ -18,7 +21,7 @@ class PagesMock: public Pages {
     }
 
     bool isIndexOutOfRange(uint16_t pageNum) override {
-      if (pageNum == 1) {
+      if (pageNum == 0) {
         return false;
       }
       return true;
@@ -35,10 +38,10 @@ class PagesMock: public Pages {
     }
 
     Page* getPage(uint16_t pageNum) override {
-      if (pageNum == 1) {
-        return new Page{(void*)"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09", 10};
+      if (isIndexOutOfRange(pageNum)) {
+        return nullptr;
       }
-      return nullptr;
+      return new Page{(void*)"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09", 10};
     }
 
     uint16_t getPageNum(void) override { return 1; }
