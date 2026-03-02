@@ -60,6 +60,16 @@ void test_S(void) {
   test_Q();
 }
 
+void test_F(void) {
+  uint8_t data[7] = {0x00, 0x01, 0x46, 0x4D, 0xBD, 0x0B, 0x28};
+  mockStream.pushBytes(data, sizeof(data));
+  comm.serialReceive();
+
+  uint8_t response[] = {0x00, 0x04, 0x00, 0x30, 0x30, 0x32, 0x12, 0xBE, 0x5D, 0xFF};
+  TEST_ASSERT_EQUAL_MEMORY(response, mockStream.getTxBuffer(), mockStream.getTxBufferLen());
+  TEST_ASSERT_TRUE(comm.isReady());
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -69,6 +79,7 @@ void setup() {
   RUN_TEST(test_wrong_crc);
   RUN_TEST(test_Q);
   RUN_TEST(test_S);
+  RUN_TEST(test_F);
 
   UNITY_END();
 }
