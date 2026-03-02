@@ -93,6 +93,13 @@ void test_p_page_out_of_range(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_p_offset_out_of_range(void) {
+  uint8_t data[] = {0x00, 0x06, 0x70, 0x00, 0xFF, 0xFF, 0x01, 0x00, 0XC3, 0X66, 0XAF, 0X3F};
+  uint8_t response[] = {0x00, 0x01, 0x84, 0x38, 0xD7, 0xA8, 0xB4}; // 0x84 = SERIAL_MSG_RANGE_ERR
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -106,6 +113,7 @@ void setup() {
   RUN_TEST(test_C);
   RUN_TEST(test_p);
   RUN_TEST(test_p_page_out_of_range);
+  RUN_TEST(test_p_offset_out_of_range);
 
   UNITY_END();
 }
