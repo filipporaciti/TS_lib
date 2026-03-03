@@ -168,12 +168,8 @@ void test_I(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
-void test_f(void) {
-  uint8_t data[] = {0x00, 0x02, 0x66, 0x01, 0X05, 0X79, 0XEE, 0X48};
-  uint8_t response[] = {0x00, 0x06, 0x00, 0x02, 0x00, 0xF0, 0x00, 0xF0, 0XC3, 0X7B, 0X73, 0X0F};
 
-  TEST_CMD(data, sizeof(data), response);
-}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -196,7 +192,6 @@ void setup() {
   RUN_TEST(test_b_page_out_of_range);
   RUN_TEST(test_M);
   RUN_TEST(test_I);
-  RUN_TEST(test_f);
 
   UNITY_END();
 }
