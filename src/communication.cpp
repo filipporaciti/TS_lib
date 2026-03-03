@@ -31,7 +31,7 @@ void Communication::serialReceive() {
 		serialBufferIndex = 0;
 		serialStatusFlag = SERIAL_RECEIVE_PAYLOAD_INPROGRESS;
 		
-		if (serialPayloadLen > SERIAL_BUFFER_SIZE) { // se la lunghezza supero quella del buffer errore
+		if (serialPayloadLen > SERIAL_BUFFER_SIZE) {
 			sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 			while (_serial->available() > 0) {
 				_serial->read();
@@ -99,7 +99,7 @@ void Communication::processSerialPayload() {
 		case 'I': // send can ID
 			sendCanID();
 			break;
-		case 'f': // send can info (serial version - table blocking factor - write blocking factor)
+		case 'f': // send can info (serial version - table blocking factor - write blocking factor) only if the can ID in the command matches the one of the device
 			sendCanInfo();
 			break;
 		default:
@@ -110,10 +110,9 @@ void Communication::processSerialPayload() {
 
 void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsigned long payloadLen) {
 	uint8_t header[2];
-	header[0] = (payloadLen + 1) >> 8;   // +1 per il flag
+	header[0] = (payloadLen + 1) >> 8;
 	header[1] = (payloadLen + 1) & 0xFF;
 
-	// Calcola CRC anche includendo il flag
 	uint32_t crc;
 
 	CRC32 crcCalc;
@@ -121,10 +120,10 @@ void Communication::sendMessage(Stream* s, uint8_t flag, uint8_t *payload, unsig
 	crcCalc.update(payload, payloadLen);
 	crc = crcCalc.finalize();
 
-	// --- Invio ---
-	s->write(header, 2);        // dimensione totale (2 byte)
-	s->write(&flag, 1);
-	s->write(payload, payloadLen); // dati veri e propri
+	// --- Send ---
+	s->write(header, 2);
+	s->write(flag);
+	s->write(payload, payloadLen);
 	s->write((crc >> 24) & 0xFF);
 	s->write((crc >> 16) & 0xFF);
 	s->write((crc >> 8) & 0xFF);
@@ -166,19 +165,16 @@ void Communication::sendCanInfo() {
 
 void Communication::sendPageValue() {
 	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
-	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
-	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]);
+	uint16_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);
 
 	void* first_byte = _pages->getPageValue(pageNum, offset);
-	if (first_byte == nullptr) {
+	if (first_byte == nullptr || (len + offset) > _pages->getPageLen(pageNum)) {
 		sendCodeMessage(_serial, SERIAL_MSG_RANGE_ERR);
 		return;
 	}
 
-	uint8_t data[len] = {};
-
-	memcpy(data, first_byte, len);
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, (uint8_t*)first_byte, len);
 }
 
 void Communication::sendCRCPage() {
@@ -207,10 +203,13 @@ void Communication::sendCRCPage() {
 }
 
 void Communication::sendRealTimeData() {
-	uint8_t data[_rt_data->getRtDataLen()] = {};
+	size_t rtDataLen = _rt_data->getRtDataLen();
+	void* rtData = _rt_data->getRtData();
+	
+	uint8_t data[rtDataLen] = {};
 
-	if (_rt_data->getRtData() != nullptr) {
-		memcpy(data, _rt_data->getRtData(), _rt_data->getRtDataLen());
+	if (rtData != nullptr) {
+		memcpy(data, rtData, rtDataLen);
 	}
 
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
@@ -221,15 +220,13 @@ void Communication::sendSavePage() {
 	bool ris = _pages->storePage(pageNum);
 	if (ris) {
 		sendCodeMessage(_serial, SERIAL_MSG_BURN_SUCCESS);
-	} else {
-		sendCodeMessage(_serial, SERIAL_MSG_UKNW_COMMAND); // non esiste un code message specifico in caso fallisce il burn
 	}
 }
 
 void Communication::sendChangePageValue() {
 	uint16_t pageNum = (uint16_t)serialReceiveBuffer[1];
-	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]); // little endian
-	size_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);		// little endian
+	uint16_t offset = (serialReceiveBuffer[3] << 8 | serialReceiveBuffer[2]);
+	size_t len = (serialReceiveBuffer[5] << 8 | serialReceiveBuffer[4]);
 
 	void* first_byte = _pages->getPageValue(pageNum, offset);
 	size_t pageLen = _pages->getPageLen(pageNum);
@@ -243,7 +240,6 @@ void Communication::sendChangePageValue() {
 	for (size_t i=0; i<len; i++) {
 		page_data[len-1-i] = serialReceiveBuffer[6+i];
 	}
-
 
 	sendCodeMessage(_serial, SERIAL_MSG_SUCCESS);
 }

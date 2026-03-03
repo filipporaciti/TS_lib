@@ -19,7 +19,7 @@ void check_codeVersion(char* code_version) {
   mockStream.pushByte('Q');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_EQUAL_STRING(code_version, mockStream.getTxBuffer().c_str());
+  TEST_ASSERT_EQUAL_STRING(code_version, mockStream.getTxBuffer());
 }
 
 void test_code_version_command(void) {
@@ -30,14 +30,14 @@ void test_code_version2_command(void) {
   mockStream.pushByte('S');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_EQUAL_STRING(DEFAULT_CODE_VERSION, mockStream.getTxBuffer().c_str());
+  TEST_ASSERT_EQUAL_STRING(DEFAULT_CODE_VERSION, mockStream.getTxBuffer());
 }
 
 void test_protocol_version_command(void) {
   mockStream.pushByte('F');
   comm.serialReceiveLegacy();
 
-  TEST_ASSERT_EQUAL_STRING(DEFAULT_PROTOCOL_VERSION, mockStream.getTxBuffer().c_str());
+  TEST_ASSERT_EQUAL_STRING(DEFAULT_PROTOCOL_VERSION, mockStream.getTxBuffer());
 }
 
 void test_two_param_constructor(void) {
@@ -56,7 +56,7 @@ void test_is_legacy(void) {
 
 void test_serialReceiveLegacy_no_data(void) {
   comm.serialReceiveLegacy();
-  TEST_ASSERT_TRUE(mockStream.getTxBuffer().equals(""));
+  TEST_ASSERT_EQUAL_STRING("", mockStream.getTxBuffer());
 }
 
 void test_set_code_version(void) {
@@ -79,7 +79,7 @@ void test_codeVersion_limit(void) {
   comm.setCodeVersion(long_code_version);
 
   check_codeVersion((char*)"123456789012345678901234567890123456789012345678901234567890123");
-  TEST_ASSERT_EQUAL(63, mockStream.getTxBuffer().length());
+  TEST_ASSERT_EQUAL(63, mockStream.getTxBufferLen());
 }
 
 void test_set_code_version_nullptr(void) {
