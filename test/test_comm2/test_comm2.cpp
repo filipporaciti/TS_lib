@@ -63,6 +63,16 @@ void test_M_len_out_of_range(void) {
   TEST_CMD(data, sizeof(data), range_err_resp);
 }
 
+void test_set_code_version(void) {
+  char new_code_version[] = "67890";
+  comm.setCodeVersion(new_code_version);
+
+  uint8_t data[] = {0x00, 0x01, 0x51, 0xCE, 0x6E, 0x8E, 0xEF};
+  uint8_t response[] = {0x00, 0x06, 0x00, 0x36, 0x37, 0x38, 0x39, 0x30, 0XF0, 0X7A, 0X25, 0XA3};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -72,6 +82,7 @@ void setup() {
   RUN_TEST(test_M_page_out_of_range);
   RUN_TEST(test_M_offset_out_of_range);
   RUN_TEST(test_M_len_out_of_range);
+  RUN_TEST(test_set_code_version);
 
   UNITY_END();
 }
