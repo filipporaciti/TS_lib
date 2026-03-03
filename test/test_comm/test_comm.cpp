@@ -130,6 +130,13 @@ void test_A(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_b(void) {
+  // 1 byte for page num
+  uint8_t data[] = {0x00, 0x02, 0x62, 0x00, 0X16, 0X12, 0X1B, 0XDA};
+  uint8_t response[] = {0x00, 0x01, 0x04, 0XD5, 0X6F, 0X2B, 0X94};
+
+  TEST_CMD(data, sizeof(data), response);
+}
 
 void setup() {
   UNITY_BEGIN();
@@ -148,6 +155,7 @@ void setup() {
   RUN_TEST(test_p_more_data);
   RUN_TEST(test_d);
   RUN_TEST(test_A);
+  RUN_TEST(test_b);
 
   UNITY_END();
 }
