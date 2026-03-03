@@ -14,12 +14,12 @@ class Rt_data {
 	public:
 		Rt_data() = default;
 		Rt_data(Rt_values* rt_values);
-		void* getRtData(void);
-		size_t getRtDataLen(void);
+		virtual void* getRtData(void);
+		virtual size_t getRtDataLen(void);
 
-		Rt_values* getRtValues(void);
+		virtual Rt_values* getRtValues(void);
 
-		void setRtValues(Rt_values* rt_values);
+		virtual void setRtValues(Rt_values* rt_values);
 
 	private:
 		Rt_values* _rt_values;

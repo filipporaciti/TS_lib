@@ -3,16 +3,18 @@
 #include <mock_stream.cpp>
 #include "communication.h"
 #include "../mock/pages_mock.cpp"
+#include "../mock/rt_data_mock.cpp"
 
 MockStream mockStream;
 PagesMock pagesMock;
+RtDataMock rtDataMock;
 Communication comm;
 
 uint8_t range_err_resp[] = {0x00, 0x01, 0x84, 0x38, 0xD7, 0xA8, 0xB4}; // 0x84 = SERIAL_MSG_RANGE_ERR
 
 void setUp(void) {
   mockStream.clear();
-  comm = Communication(&mockStream, (char*)"12345", nullptr, &pagesMock);
+  comm = Communication(&mockStream, (char*)"12345", &rtDataMock, &pagesMock);
 }
 
 void tearDown(void) {}
@@ -121,6 +123,13 @@ void test_d(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_A(void) {
+  uint8_t data[] = {0x00, 0x01, 0x41, 0XD3, 0XD9, 0X9E, 0X8B};
+  uint8_t response[] = {0x00, 0x05, 0x00, 0x01, 0x02, 0x03, 0x04, 0X51, 0X5A, 0XD3, 0XCC};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -138,6 +147,7 @@ void setup() {
   RUN_TEST(test_p_len_out_of_range);
   RUN_TEST(test_p_more_data);
   RUN_TEST(test_d);
+  RUN_TEST(test_A);
 
   UNITY_END();
 }
