@@ -42,12 +42,20 @@ void test_unknown_command(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_M_page_out_of_range(void) {
+  // 1 byte for page num, 2 bytes for offset, 2 bytes for len, n bytes for values
+  uint8_t data[] = {0x00, 0x08, 0x4D, 0x01, 0x00, 0x00, 0x02, 0x00, 0x0B, 0x0A, 0XD8, 0XE5, 0XFB, 0XBF};
+
+  TEST_CMD(data, sizeof(data), range_err_resp);
+}
+
 
 void setup() {
   UNITY_BEGIN();
 
   RUN_TEST(test_f);
   RUN_TEST(test_unknown_command);
+  RUN_TEST(test_M_page_out_of_range);
 
   UNITY_END();
 }
