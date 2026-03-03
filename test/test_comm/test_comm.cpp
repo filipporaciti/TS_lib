@@ -161,6 +161,13 @@ void test_M(void) {
   TEST_ASSERT_EQUAL(0x0B, pagesMock.getPageValue(0, 1)[0]);
 }
 
+void test_I(void) {
+  uint8_t data[] = {0x00, 0x01, 0x49, 0XDD, 0X02, 0X16, 0XB9};
+  uint8_t response[] = {0x00, 0x02, 0x00, 0x01, 0X36, 0XDE, 0X22, 0X69};
+
+  TEST_CMD(data, sizeof(data), response);
+}
+
 void setup() {
   UNITY_BEGIN();
 
@@ -181,6 +188,7 @@ void setup() {
   RUN_TEST(test_b);
   RUN_TEST(test_b_page_out_of_range);
   RUN_TEST(test_M);
+  RUN_TEST(test_I);
 
   UNITY_END();
 }
