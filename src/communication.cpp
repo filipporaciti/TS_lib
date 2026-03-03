@@ -99,7 +99,7 @@ void Communication::processSerialPayload() {
 		case 'I': // send can ID
 			sendCanID();
 			break;
-		case 'f': // send can info (serial version - table blocking factor - write blocking factor)
+		case 'f': // send can info (serial version - table blocking factor - write blocking factor) only if the can ID in the command matches the one of the device
 			sendCanInfo();
 			break;
 		default:
