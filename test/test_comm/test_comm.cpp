@@ -14,6 +14,7 @@ uint8_t range_err_resp[] = {0x00, 0x01, 0x84, 0x38, 0xD7, 0xA8, 0xB4}; // 0x84 =
 
 void setUp(void) {
   mockStream.clear();
+  pagesMock.reset();
   comm = Communication(&mockStream, (char*)"12345", &rtDataMock, &pagesMock);
 }
 
@@ -149,6 +150,17 @@ void test_b_page_out_of_range(void) {
   TEST_ASSERT_TRUE(comm.isReady());
 }
 
+void test_M(void) {
+  // 1 byte for page num, 2 bytes for offset, 2 bytes for len, n bytes for values
+  uint8_t data[] = {0x00, 0x08, 0x4D, 0x00, 0x00, 0x00, 0x02, 0x00, 0x0B, 0x0A, 0X7E, 0X92, 0XF0, 0X0B};
+  uint8_t response[] = {0x00, 0x01, 0x00, 0XD2, 0X02, 0XEF, 0X8D};
+
+  TEST_CMD(data, sizeof(data), response);
+
+  TEST_ASSERT_EQUAL(0x0A, pagesMock.getPageValue(0, 0)[0]);
+  TEST_ASSERT_EQUAL(0x0B, pagesMock.getPageValue(0, 1)[0]);
+}
+
 void setup() {
   UNITY_BEGIN();
 
@@ -168,6 +180,7 @@ void setup() {
   RUN_TEST(test_A);
   RUN_TEST(test_b);
   RUN_TEST(test_b_page_out_of_range);
+  RUN_TEST(test_M);
 
   UNITY_END();
 }

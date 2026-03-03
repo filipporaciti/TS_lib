@@ -174,7 +174,7 @@ void Communication::sendPageValue() {
 		return;
 	}
 
-	sendMessage(_serial, SERIAL_MSG_SUCCESS, first_byte, len);
+	sendMessage(_serial, SERIAL_MSG_SUCCESS, (uint8_t*)first_byte, len);
 }
 
 void Communication::sendCRCPage() {
@@ -240,7 +240,6 @@ void Communication::sendChangePageValue() {
 	for (size_t i=0; i<len; i++) {
 		page_data[len-1-i] = serialReceiveBuffer[6+i];
 	}
-
 
 	sendCodeMessage(_serial, SERIAL_MSG_SUCCESS);
 }
