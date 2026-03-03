@@ -203,10 +203,13 @@ void Communication::sendCRCPage() {
 }
 
 void Communication::sendRealTimeData() {
-	uint8_t data[_rt_data->getRtDataLen()] = {};
+	size_t rtDataLen = _rt_data->getRtDataLen();
+	void* rtData = _rt_data->getRtData();
+	
+	uint8_t data[rtDataLen] = {};
 
-	if (_rt_data->getRtData() != nullptr) {
-		memcpy(data, _rt_data->getRtData(), _rt_data->getRtDataLen());
+	if (rtData != nullptr) {
+		memcpy(data, rtData, rtDataLen);
 	}
 
 	sendMessage(_serial, SERIAL_MSG_SUCCESS, data, sizeof(data));
