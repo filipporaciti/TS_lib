@@ -31,7 +31,7 @@ class PagesMock: public Pages {
 
     void loadStoredPages(void) override {}
 
-    bool storePage(uint16_t pageNum) override { return true; }
+    bool storePage(uint16_t pageNum) override { return !isIndexOutOfRange(pageNum); }
 
     Page* getPages(void) override {
       return new Page[1]{{(void*)"\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09", 10}};

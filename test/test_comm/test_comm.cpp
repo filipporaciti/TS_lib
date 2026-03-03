@@ -138,6 +138,17 @@ void test_b(void) {
   TEST_CMD(data, sizeof(data), response);
 }
 
+void test_b_page_out_of_range(void) {
+  // 1 byte for page num
+  uint8_t data[] = {0x00, 0x02, 0x62, 0x01, 0X61, 0X15, 0X2B, 0X4C};
+
+  mockStream.pushBytes(data, sizeof(data));
+  comm.serialReceive();
+
+  TEST_ASSERT_EQUAL(0, mockStream.getTxBufferLen());
+  TEST_ASSERT_TRUE(comm.isReady());
+}
+
 void setup() {
   UNITY_BEGIN();
 
@@ -156,6 +167,7 @@ void setup() {
   RUN_TEST(test_d);
   RUN_TEST(test_A);
   RUN_TEST(test_b);
+  RUN_TEST(test_b_page_out_of_range);
 
   UNITY_END();
 }

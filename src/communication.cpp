@@ -220,8 +220,6 @@ void Communication::sendSavePage() {
 	bool ris = _pages->storePage(pageNum);
 	if (ris) {
 		sendCodeMessage(_serial, SERIAL_MSG_BURN_SUCCESS);
-	} else {
-		sendCodeMessage(_serial, SERIAL_MSG_UKNW_COMMAND); // non esiste un code message specifico in caso fallisce il burn
 	}
 }
 
