@@ -17,6 +17,7 @@ void setUp(void) {
   p1.x2 = 0;
   p2.x3 = 0;
   p2.x4 = 0;
+  p2.x5 = 0;
 }
 
 void tearDown(void) {}
@@ -31,16 +32,19 @@ void test_get_page_value(void) {
   p1.x2 = 20;
   p2.x3 = 30;
   p2.x4 = 40;
+  p2.x5 = 50;
 
-  uint8_t* x1 = myPages.getPageValue(0, 0);
-  uint8_t* x2 = myPages.getPageValue(0, sizeof(p1.x1));
-  uint8_t* x3 = myPages.getPageValue(1, 0);
-  uint16_t* x4 = (uint16_t*)myPages.getPageValue(1, sizeof(p2.x3));
+  uint8_t x1 = myPages.getPageValue(0, 0)[0];
+  uint8_t x2 = myPages.getPageValue(0, sizeof(p1.x1))[0];
+  uint8_t x3 = myPages.getPageValue(1, 0)[0];
+  uint8_t x4 = myPages.getPageValue(1, sizeof(p2.x3))[0];
+  uint16_t x5 = myPages.getPageValue(1, sizeof(p2.x3) + sizeof(p2.x4))[0] | (myPages.getPageValue(1, sizeof(p2.x3) + sizeof(p2.x4))[1] << 8);
 
-  TEST_ASSERT_EQUAL(10, *x1);
-  TEST_ASSERT_EQUAL(20, *x2);
-  TEST_ASSERT_EQUAL(30, *x3);
-  TEST_ASSERT_EQUAL(40, *x4);
+  TEST_ASSERT_EQUAL(10, x1);
+  TEST_ASSERT_EQUAL(20, x2);
+  TEST_ASSERT_EQUAL(30, x3);
+  TEST_ASSERT_EQUAL(40, x4);
+  TEST_ASSERT_EQUAL(50, x5);
 }
 
 void test_get_page_value_out_of_range(void) {
@@ -61,17 +65,18 @@ void test_get_page_crc(void) {
   uint32_t crc2 = myPages.getPageCRC(1);
 
   TEST_ASSERT_EQUAL(1104745215, crc1);
-  TEST_ASSERT_EQUAL(4282505490, crc2);
+  TEST_ASSERT_EQUAL(558161692, crc2);
 
   p1.x1 = 1;
   p1.x2 = 2;
   p2.x3 = 1;
   p2.x4 = 2;
+  p2.x5 = 3;
   crc1 = myPages.getPageCRC(0);
   crc2 = myPages.getPageCRC(1);
 
   TEST_ASSERT_EQUAL(3066839698, crc1);
-  TEST_ASSERT_EQUAL(3434467751, crc2);
+  TEST_ASSERT_EQUAL(2974891988, crc2);
 }
 
 void test_get_page_crc_out_of_range(void) {
@@ -113,6 +118,7 @@ void test_store_page(void) {
   p1.x2 = 2;
   p2.x3 = 3;
   p2.x4 = 4;
+  p2.x5 = 5;
 
   bool result1 = myPages.storePage(0);
 
@@ -122,6 +128,7 @@ void test_store_page(void) {
   p1.x2 = 6;
   p2.x3 = 7;
   p2.x4 = 8;
+  p2.x5 = 81;
 
   myPages.loadStoredPages();
 
@@ -129,6 +136,7 @@ void test_store_page(void) {
   TEST_ASSERT_EQUAL(2, p1.x2);
   TEST_ASSERT_EQUAL(0, p2.x3);
   TEST_ASSERT_EQUAL(0, p2.x4);
+  TEST_ASSERT_EQUAL(0, p2.x5);
 }
 
 void test_store_page_out_of_range(void) {

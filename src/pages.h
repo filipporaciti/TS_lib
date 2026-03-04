@@ -2,6 +2,7 @@
 #define PAGES_H
 
 #include <Arduino.h>
+#include "flash.h"
 
 struct Page {
   void* pointer;
@@ -30,6 +31,7 @@ class Pages {
   private:
     Page* _pages;
     uint16_t _num_pages;
+    Flash flash;
 };
 
 #endif
