@@ -52,6 +52,10 @@ void test_update_not_ready(void) {
   TEST_ASSERT_EQUAL(expected_len, mockStream.getTxBufferLen());
 }
 
+void test_set_pages(void) {
+
+}
+
 
 void setup() {
   UNITY_BEGIN();
@@ -59,25 +63,6 @@ void setup() {
   RUN_TEST(test_update_legacy);
   RUN_TEST(test_update);
   RUN_TEST(test_update_not_ready);
-  // RUN_TEST(test_update_empty);
-
-  // RUN_TEST(test_four_param_constructor);
-  // RUN_TEST(test_constructor_nullptr);
-
-  // RUN_TEST(test_set_pages);
-  // RUN_TEST(test_set_pages_nullptr);
-  // RUN_TEST(test_set_pages_out_of_bounds);
-  // RUN_TEST(test_pages_ref_escape);
-  // RUN_TEST(test_pages_ref_escape2);
-  // RUN_TEST(test_get_page);
-  // RUN_TEST(test_get_page_out_of_bounds);
-
-  // RUN_TEST(test_set_rt_data);
-  // RUN_TEST(test_set_rt_data_nullptr);
-  // RUN_TEST(test_rt_data_ref_escape);
-  // RUN_TEST(test_rt_data_ref_escape2);
-
-  // RUN_TEST(test_get_page_num);
 
   UNITY_END();
 }
