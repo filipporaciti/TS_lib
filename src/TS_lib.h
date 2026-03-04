@@ -30,7 +30,7 @@ class TS_lib {
 
     Rt_values* getRtData(void);
   private:
-    char* _code_version = DEFAULT_CODE_VERSION;
+    char _code_version[64];
     Stream* _serial1;
     Communication _comm;
     Communication_legacy _comm_legacy;
