@@ -5,6 +5,14 @@
 Pages::Pages(Page* pages, uint16_t num_pages) {
 	_pages = pages;
 	_num_pages = num_pages;
+
+	#ifdef ESP32
+		uint32_t pages_size = 0;
+		for (uint16_t i = 0; i < num_pages; i++) {
+			pages_size += pages[i].len;
+		}
+		EEPROM.begin(pages_size);
+	#endif
 }
 
 uint8_t* Pages::getPageValue(uint16_t pageNum, uint16_t offset){
@@ -51,6 +59,9 @@ bool Pages::storePage(uint16_t pageNum) {
 	for (size_t i = 0; i < _pages[pageNum].len; i++) {
 	    EEPROM.write(position+i, ((uint8_t*)_pages[pageNum].pointer)[i]);
 	}
+	#ifdef ESP32
+		EEPROM.commit();
+	#endif
 	interrupts();
 	return true;
 }
