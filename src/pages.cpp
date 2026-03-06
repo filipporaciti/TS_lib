@@ -50,12 +50,12 @@ bool Pages::storePage(uint16_t pageNum) {
 	uint32_t position = 0;
 
 	while (index < pageNum) {
-		position += _pages[index].len;
+		position += getPageLen(index);
 		index++;
 	}
 
-	for (size_t i = 0; i < _pages[pageNum].len; i++) {
-	    flash.write(position+i, ((uint8_t*)_pages[pageNum].pointer)[i]);
+	for (size_t i = 0; i < getPageLen(pageNum); i++) {
+	    flash.write(position+i, getPageValue(pageNum, 0)[i]);
 	}
 	flash.commit();
 	interrupts();
@@ -70,9 +70,9 @@ void Pages::loadStoredPages(void) {
 
 	while (!isIndexOutOfRange(index)) {
 		for (size_t i = 0; i < _pages[index].len; i++) {
-		    ((uint8_t*)_pages[index].pointer)[i] = flash.read(position+i);
+		    getPageValue(index, 0)[i] = flash.read(position+i);
 		}
-		position += _pages[index].len;
+		position += getPageLen(index);
 		index++;
 	}
 	interrupts();
