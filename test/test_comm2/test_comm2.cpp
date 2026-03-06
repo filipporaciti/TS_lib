@@ -29,7 +29,7 @@ void TEST_CMD(uint8_t* data, size_t dataSize, uint8_t* response) {
 }
 
 void test_f(void) {
-  uint8_t data[] = {0x00, 0x02, 0x66, 0x01, 0X05, 0X79, 0XEE, 0X48};
+  uint8_t data[] = {0x00, 0x02, 0x66, 0x00, 0X72, 0X7E, 0XDE, 0XDE};
   uint8_t response[] = {0x00, 0x06, 0x00, 0x02, 0x00, 0xF0, 0x00, 0xF0, 0XC3, 0X7B, 0X73, 0X0F};
 
   TEST_CMD(data, sizeof(data), response);
