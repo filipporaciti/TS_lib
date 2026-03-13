@@ -14,6 +14,8 @@ class Pages {
     Pages() = default;
     Pages(Page* pages, uint16_t num_pages);
 
+    void init();
+
     virtual uint8_t* getPageValue(uint16_t pageNum, uint16_t offset);
 	  virtual uint32_t getPageCRC(uint16_t pageNum);
 	  virtual size_t getPageLen(uint16_t pageNum);

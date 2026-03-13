@@ -17,6 +17,8 @@ TS_lib ts = TS_lib(&Serial, &rt_values, pages, 1);
 void setup() {
 	Serial.begin(115200);
 	while (Serial.available());
+
+	ts.init();
 }
 
 void loop() {
