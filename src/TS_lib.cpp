@@ -53,7 +53,7 @@ char* TS_lib::getCodeVersion(void) {
 
 void TS_lib::setPages(Page* pages, uint16_t num_pages) {
 	_pages.setPages(pages, num_pages);
-	_pages.loadStoredPages();
+	_pages.init();
 }
 
 void TS_lib::setRtData(Rt_values* rt_values) {

@@ -12,6 +12,8 @@ void setup() {
 	Serial.begin(115200);
 	while (Serial.available());
 
+	ts.init();
+	
 	ts.setCodeVersion("MyCodeVersion_11-2025");
 
 	// WARNING!!! x2 only exists in this scope (setup function); so when loop function will be execute, x2 will no longer exist => crash (same for pages)
@@ -39,7 +41,12 @@ unsigned long times;
 void changeValue() {
 	rt_data.seconds = millis();
 	rt_data.tps = (millis()/10)%100;
-	rt_data.rpm = (millis())%p1.rpmMaxLimit;
+
+	if (p1.rpmMaxLimit == 0) {
+		rt_data.rpm;
+	} else {
+		rt_data.rpm = (millis())%p1.rpmMaxLimit;
+	}
 
 	times++;
 	if ((millis()-prev_time) >= 1000) {
