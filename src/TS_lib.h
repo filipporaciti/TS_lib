@@ -16,6 +16,9 @@ class TS_lib {
     TS_lib() = default;
     TS_lib(Stream* s1);
     TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages);
+
+    void init();
+
     void update(void);
 
     void setCodeVersion(char* code_version);
@@ -30,7 +33,7 @@ class TS_lib {
 
     Rt_values* getRtData(void);
   private:
-    char* _code_version = DEFAULT_CODE_VERSION;
+    char _code_version[64];
     Stream* _serial1;
     Communication _comm;
     Communication_legacy _comm_legacy;

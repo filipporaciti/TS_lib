@@ -2,6 +2,8 @@
 # Mac
 .DS_Store
 
+.pio
+.vscode
 .idea
 
 # Prerequisites

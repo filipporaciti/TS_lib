@@ -19,6 +19,8 @@ TS_lib ts = TS_lib(&Serial, &rt_values, pages, 2);
 void setup() {
 	Serial.begin(115200);
 	while (Serial.available());
+
+	ts.init();
 }
 
 void loop() {
@@ -31,7 +33,9 @@ unsigned long times;
 void changeValue() {
 	rt_data.seconds = millis();
 	rt_data.tps = (millis()/10)%100;
-	rt_data.rpm = (millis())%p1.rpmMaxLimit;
+	if (p1.rpmMaxLimit != 0) {
+		rt_data.rpm = (millis())%p1.rpmMaxLimit;
+	}
 
 	rt_data.sparkAdvance = calcAdv();
 

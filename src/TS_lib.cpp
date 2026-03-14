@@ -1,6 +1,9 @@
 #include "TS_lib.h"
-#include "Arduino.h"
+#include <Arduino.h>
 #include "communication.h"
+
+#include <EEPROM.h>
+
 
 char DEFAULT_CODE_VERSION[] = "TSlib_11-2025";
 
@@ -8,12 +11,16 @@ TS_lib::TS_lib(Stream* s1)
 	: TS_lib(s1, nullptr, nullptr, 0) {} 
 
 TS_lib::TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages) {
+	setCodeVersion(DEFAULT_CODE_VERSION);
 	_serial1 = s1;
 	_rt_data = Rt_data(rt_values);
 	_pages = Pages(pages, num_pages);
-	_pages.loadStoredPages();
 	_comm = Communication(_serial1, DEFAULT_CODE_VERSION, &_rt_data, &_pages);
 	_comm_legacy = Communication_legacy(_serial1, DEFAULT_CODE_VERSION);
+}
+
+void TS_lib::init() {
+	_pages.init();
 }
 
 void TS_lib::update() {
@@ -28,18 +35,25 @@ void TS_lib::update() {
 
 
 void TS_lib::setCodeVersion(char* code_version) {
-	_code_version = code_version;
+	if (code_version == nullptr) code_version = (char*)"";
+	
+	strncpy(_code_version, code_version, sizeof(_code_version) - 1);
+	_code_version[sizeof(_code_version) - 1] = '\0';
+
 	_comm.setCodeVersion(code_version);
 	_comm_legacy.setCodeVersion(code_version);
 }
 
 char* TS_lib::getCodeVersion(void) {
-	return _code_version;
+	char* code_version_copy = new char[sizeof(_code_version)];
+	strncpy(code_version_copy, _code_version, sizeof(_code_version));
+	code_version_copy[sizeof(_code_version) - 1] = '\0';
+	return code_version_copy;
 }
 
 void TS_lib::setPages(Page* pages, uint16_t num_pages) {
 	_pages.setPages(pages, num_pages);
-	_pages.loadStoredPages();
+	_pages.init();
 }
 
 void TS_lib::setRtData(Rt_values* rt_values) {

@@ -7,6 +7,7 @@ struct realtime_data {
   uint8_t   tps;
   uint8_t   synccnt;
   uint8_t   sparkAdvance;
+  uint8_t   padding[3]; // byte alignment for esp32
 };
 
 // **************************

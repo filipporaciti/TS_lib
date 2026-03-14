@@ -1,8 +1,15 @@
 #include "communication_legacy.h"
+#include "TS_lib.h"
 
+
+Communication_legacy::Communication_legacy(Stream* serial) {
+	setCodeVersion(DEFAULT_CODE_VERSION);
+	_protocol_version = DEFAULT_PROTOCOL_VERSION;
+	_serial = serial;
+}
 
 Communication_legacy::Communication_legacy(Stream* serial, char* code_version) {
-	_code_version = code_version;
+	setCodeVersion(code_version);
 	_protocol_version = DEFAULT_PROTOCOL_VERSION;
 	_serial = serial;
 }
@@ -43,5 +50,7 @@ bool Communication_legacy::isLegacy(uint8_t cmd) {
 
 
 void Communication_legacy::setCodeVersion(char* code_version) {
-	_code_version = code_version;
+	if (code_version == nullptr) code_version = (char*)"";
+	strncpy(_code_version, code_version, sizeof(_code_version) - 1);
+	_code_version[sizeof(_code_version) - 1] = '\0';
 }
