@@ -13,6 +13,7 @@ Pages myPages(pages, 2);
 
 void setUp(void) {
   myPages = Pages(pages, 2);
+  myPages.init();
   p1.x1 = 0;
   p1.x2 = 0;
   p2.x3 = 0;
