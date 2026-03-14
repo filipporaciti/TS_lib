@@ -16,6 +16,9 @@ class TS_lib {
     TS_lib() = default;
     TS_lib(Stream* s1);
     TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages);
+
+    void init();
+
     void update(void);
 
     void setCodeVersion(char* code_version);

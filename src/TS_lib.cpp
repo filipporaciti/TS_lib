@@ -2,6 +2,9 @@
 #include <Arduino.h>
 #include "communication.h"
 
+#include <EEPROM.h>
+
+
 char DEFAULT_CODE_VERSION[] = "TSlib_11-2025";
 
 TS_lib::TS_lib(Stream* s1) 
@@ -12,9 +15,12 @@ TS_lib::TS_lib(Stream* s1, Rt_values* rt_values, Page* pages, uint16_t num_pages
 	_serial1 = s1;
 	_rt_data = Rt_data(rt_values);
 	_pages = Pages(pages, num_pages);
-	_pages.loadStoredPages();
 	_comm = Communication(_serial1, DEFAULT_CODE_VERSION, &_rt_data, &_pages);
 	_comm_legacy = Communication_legacy(_serial1, DEFAULT_CODE_VERSION);
+}
+
+void TS_lib::init() {
+	_pages.init();
 }
 
 void TS_lib::update() {
@@ -47,7 +53,7 @@ char* TS_lib::getCodeVersion(void) {
 
 void TS_lib::setPages(Page* pages, uint16_t num_pages) {
 	_pages.setPages(pages, num_pages);
-	_pages.loadStoredPages();
+	_pages.init();
 }
 
 void TS_lib::setRtData(Rt_values* rt_values) {

@@ -40,7 +40,7 @@ class Communication {
     Stream* _serial;
     Pages* _pages;
     Rt_data* _rt_data;
-    uint8_t _canID = 1; // must be one value
+    uint8_t _canID = 0; // must be one value
 
     SerialStatus serialStatusFlag = SERIAL_READY;
     uint16_t serialPayloadLen = 0;

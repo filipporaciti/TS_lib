@@ -163,7 +163,7 @@ void test_M(void) {
 
 void test_I(void) {
   uint8_t data[] = {0x00, 0x01, 0x49, 0XDD, 0X02, 0X16, 0XB9};
-  uint8_t response[] = {0x00, 0x02, 0x00, 0x01, 0X36, 0XDE, 0X22, 0X69};
+  uint8_t response[] = {0x00, 0x02, 0x00, 0x00, 0X41, 0XD9, 0X12, 0XFF};
 
   TEST_CMD(data, sizeof(data), response);
 }
